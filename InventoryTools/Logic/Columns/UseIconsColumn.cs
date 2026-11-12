@@ -113,7 +113,7 @@ namespace InventoryTools.Logic.Columns
                     search = search.Where(itemSource => itemSource.MapIds != null && itemSource.MapIds.Any(mapId => _mapSheet.GetRow(mapId).FormattedName.ToLower().PassesFilter(filterText)));
                 }
 
-                var itemSources = columnConfiguration.FilterText != "" ? search.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : search;
+                var itemSources = columnConfiguration.FilterText != "" ? search.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : search;
                 messages.AddRange(_itemInfoRenderService.DrawItemUseIconsContainer("ItemUses" + rowIndex, filterConfiguration.TableHeight * ImGui.GetIO().FontGlobalScale - ImGui.GetStyle().FramePadding.X, new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight), itemSources.ToList()));
             }
             return messages;
@@ -122,18 +122,18 @@ namespace InventoryTools.Logic.Columns
         public override void Setup(FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration,
             int columnIndex)
         {
-            ImGui.TableSetupColumn(RenderName ?? Name, ImGuiTableColumnFlags.WidthFixed, Width, (uint)columnIndex);
+            ImGui.TableSetupColumn(ImGuiService.Text.Get(RenderName ?? Name), ImGuiTableColumnFlags.WidthFixed, Width, (uint)columnIndex);
         }
 
         public override string CsvExport(ColumnConfiguration columnConfiguration, SearchResult searchResult)
         {
-            var itemUses = columnConfiguration.FilterText != "" ? searchResult.Item.Uses.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Uses;
+            var itemUses = columnConfiguration.FilterText != "" ? searchResult.Item.Uses.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Uses;
             return String.Join(", ", itemUses.Select(c => _itemInfoRenderService.GetUseDescription(c)));
         }
 
         public override dynamic? JsonExport(ColumnConfiguration columnConfiguration, SearchResult searchResult)
         {
-            var itemUses = columnConfiguration.FilterText != "" ? searchResult.Item.Uses.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Uses;
+            var itemUses = columnConfiguration.FilterText != "" ? searchResult.Item.Uses.Where(c => (_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService.GetUseTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Uses;
             return String.Join(", ", itemUses.Select(c => _itemInfoRenderService.GetUseDescription(c)));
         }
 
@@ -165,7 +165,7 @@ public override IEnumerable<SearchResult> Filter(ColumnConfiguration columnConfi
                     if (columnConfiguration.FilterText != string.Empty)
                     {
                         if (!(_itemInfoRenderService.GetUseName(c).ToLower() + " " + _itemInfoRenderService
-                                .GetUseTypeName(c.GetType()).Singular.ToLower())
+                                .GetUseTypeName(c.GetType(), localized: false).Singular.ToLower())
                             .PassesFilterComparisonText(columnConfiguration.FilterComparisonText))
                         {
                             return false;

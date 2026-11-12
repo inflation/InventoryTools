@@ -5,6 +5,7 @@ using Dalamud.Interface.Utility.Raii;
 using InventoryTools.Compendium.Interfaces;
 using InventoryTools.Compendium.Models;
 using InventoryTools.Compendium.Sections.Options;
+using InventoryTools.Localizers;
 using InventoryTools.Services;
 
 namespace InventoryTools.Compendium.Sections;
@@ -21,6 +22,7 @@ public abstract class ViewSection : ICompendiumViewSection
     }
 
     public SectionOptions SectionOptions { get; }
+    protected UiText Text => _imGuiService.Text;
 
     public void Draw(SectionState sectionState)
     {
@@ -37,7 +39,7 @@ public abstract class ViewSection : ICompendiumViewSection
                 _headerButtons.Add(new ImGuiService.HeaderButton()
                 {
                     Id = "Menu",
-                    Label = "Menu",
+                    Label = Text.Get("Menu"),
                     Image = "menu",
                     Callback = () => { },
                 });
@@ -48,12 +50,12 @@ public abstract class ViewSection : ICompendiumViewSection
                 {
                     Id = "Settings",
                     Image = "wrench-icon",
-                    Label = "Settings",
+                    Label = Text.Get("Settings"),
                     Callback = () => { },
                 });
             }
         }
-        if (_imGuiService.CollapsingHeader(SectionName, out var buttonClicked, _headerButtons, ImGuiTreeNodeFlags.DefaultOpen))
+        if (_imGuiService.CollapsingHeader(Text.Label(SectionName), out var buttonClicked, _headerButtons, ImGuiTreeNodeFlags.DefaultOpen))
         {
             DrawSection(sectionState);
         }

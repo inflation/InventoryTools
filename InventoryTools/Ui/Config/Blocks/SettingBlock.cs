@@ -56,7 +56,7 @@ public sealed class SettingBlock : IConfigBlock
         {
             using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
             {
-                ImGui.TextUnformatted("NEW");
+                ImGui.TextUnformatted(context.ImGuiService.Text.Get("NEW"));
             }
         }
 

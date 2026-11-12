@@ -58,7 +58,7 @@ public sealed class MetadataSection : ViewSection
             ImGui.TableNextRow();
 
             ImGui.TableNextColumn();
-            ImGui.TextUnformatted(row.Label);
+            ImGui.TextUnformatted(Text.Get(row.Label));
 
             ImGui.TableNextColumn();
             ImGui.TextWrapped(value);

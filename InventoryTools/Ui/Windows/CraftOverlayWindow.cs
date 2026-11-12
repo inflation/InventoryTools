@@ -170,7 +170,7 @@ public class CraftOverlayWindow : OverlayWindow
                             break;
                     }
                     ImGui.TextUnformatted($"Left Click: {nextState}");
-                    ImGui.TextUnformatted("Right Click: Menu");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Right Click: Menu"));
                 }
             }
 
@@ -184,7 +184,7 @@ public class CraftOverlayWindow : OverlayWindow
         {
             if (popup)
             {
-                if (ImGui.MenuItem("Close"))
+                if (ImGui.MenuItem(ImGuiService.Text.Label("Close")))
                 {
                     this.Close();
                 }
@@ -271,7 +271,7 @@ public class CraftOverlayWindow : OverlayWindow
         }
         else
         {
-            ImGui.Text("Nothing to do.");
+            ImGui.Text(ImGuiService.Text.Get("Nothing to do."));
             ImGui.SetCursorPosX(ImGui.GetCursorPosX() + (150 + 70 + 80 * ImGui.GetIO().FontGlobalScale));
         }
 
@@ -346,7 +346,7 @@ public class CraftOverlayWindow : OverlayWindow
 
         if (SelectedConfiguration == null)
         {
-            ImGui.Text("No craft list active.");
+            ImGui.Text(ImGuiService.Text.Get("No craft list active."));
         }
         else if(craftList != null)
         {
@@ -432,7 +432,10 @@ public class CraftOverlayWindow : OverlayWindow
                                                 .Distinct().ToList();
                                             foreach (var result in sortingResults)
                                             {
-                                                ImGui.Text($"{result.Quantity} available to retrieve from {_characterMonitor.GetCharacterById(result.SourceRetainerId)?.FormattedName ?? "Unknown Retainer"} in {result.SourceBag.FormattedName()} at {result.BagLocation.X + 1}/{result.BagLocation.Y + 1}");
+                                                var text = ImGuiService.Text;
+                                                var retainerName = _characterMonitor.GetCharacterById(result.SourceRetainerId)?.FormattedName ?? text.Get("Unknown Retainer");
+                                                ImGui.TextUnformatted(text.Format("{0} available to retrieve from {1} in {2} at {3}/{4}",
+                                                    result.Quantity, retainerName, text.Get(result.SourceBag.FormattedName()), result.BagLocation.X + 1, result.BagLocation.Y + 1));
                                             }
                                         }
                                     }
@@ -480,7 +483,7 @@ public class CraftOverlayWindow : OverlayWindow
                             {
                                 if (popup.Success)
                                 {
-                                    if (ImGui.MenuItem("More Information"))
+                                    if (ImGui.MenuItem(ImGuiService.Text.Label("More Information")))
                                     {
                                         this.MediatorService.Publish(new OpenUintWindowMessage(typeof(ItemWindow), currentItem.ItemId));
                                     }

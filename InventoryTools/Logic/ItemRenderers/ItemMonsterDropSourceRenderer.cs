@@ -44,7 +44,7 @@ public class ItemMonsterDropSourceRenderer : ItemInfoRenderer<ItemMonsterDropSou
         var asSource = AsSource(source);
         ImGui.Text("Monster: " + asSource.MobDrop.BNpcName.Value.Singular.ExtractText().ToTitleCase());
 
-        ImGui.Text("Locations: ");
+        ImGui.Text(Text.Get("Locations: "));
         using (ImRaii.PushIndent())
         {
             foreach (var groupedSpawns in asSource.BNpcName.MobSpawnPositions.GroupBy(c => c.TerritoryTypeId))

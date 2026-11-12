@@ -35,7 +35,7 @@ public class ItemSkybuilderHandInSourceRenderer : ItemInfoRenderer<ItemSkybuilde
         ImGui.Text("Level: " + asSource.Level);
         ImGui.Text("Max Level: " + asSource.LevelMax);
 
-        ImGui.Text("Rewards:");
+        ImGui.Text(Text.Get("Rewards:"));
         using (ImRaii.PushIndent())
         {
             ImGui.Text("Exp: " + baseReward.ExpReward + "/" + midReward.ExpReward + "/" + highReward.ExpReward);

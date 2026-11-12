@@ -77,26 +77,26 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
         {
             if (menuBar)
             {
-                using (var menu = ImRaii.Menu("File"))
+                using (var menu = ImRaii.Menu(ImGuiService.Text.Label("File")))
                 {
                     if (menu)
                     {
-                        if (ImGui.MenuItem("Configuration"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Configuration")))
                         {
                             MediatorService.Publish(new OpenGenericWindowMessage(typeof(ConfigurationWindow)));
                         }
 
-                        if (ImGui.MenuItem("Changelog"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Changelog")))
                         {
                             MediatorService.Publish(new OpenGenericWindowMessage(typeof(ChangelogWindow)));
                         }
 
-                        if (ImGui.MenuItem("Help"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Help")))
                         {
                             MediatorService.Publish(new OpenGenericWindowMessage(typeof(HelpWindow)));
                         }
 
-                        if (ImGui.MenuItem("Enable Verbose Logging", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Enable Verbose Logging"), "",
                                 this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose))
                         {
                             if (this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose)
@@ -109,12 +109,12 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
                             }
                         }
 
-                        if (ImGui.MenuItem("Generate Support Dump"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Generate Support Dump")))
                         {
                             MediatorService.Publish(new OpenGenericWindowMessage(typeof(SupportDumpWindow)));
                         }
 
-                        if (ImGui.MenuItem("Report a Issue"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Report a Issue")))
                         {
                             "https://github.com/Critical-Impact/InventoryTools".OpenBrowser();
                         }
@@ -124,24 +124,24 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
                             "https://ko-fi.com/critical_impact".OpenBrowser();
                         }
 
-                        if (ImGui.MenuItem("Close"))
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Close")))
                         {
                             this.IsOpen = false;
                         }
                     }
                 }
 
-                using (var menu = ImRaii.Menu("Mode"))
+                using (var menu = ImRaii.Menu(ImGuiService.Text.Label("Mode")))
                 {
                     if (menu)
                     {
-                        if (ImGui.MenuItem("Class/Job", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Class/Job"), "",
                                 _modeSetting.CurrentValue(_configuration) == EquipmentSuggestMode.Class))
                         {
                             _modeSetting.UpdateFilterConfiguration(_configuration, EquipmentSuggestMode.Class);
                         }
 
-                        if (ImGui.MenuItem("Tool/Weapon", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Tool/Weapon"), "",
                                 _modeSetting.CurrentValue(_configuration) == EquipmentSuggestMode.Tool))
                         {
                             _modeSetting.UpdateFilterConfiguration(_configuration, EquipmentSuggestMode.Tool);
@@ -149,24 +149,24 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
                     }
                 }
 
-                using (var menu = ImRaii.Menu("View"))
+                using (var menu = ImRaii.Menu(ImGuiService.Text.Label("View")))
                 {
                     if (menu)
                     {
-                        if (ImGui.MenuItem("Normal", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Normal"), "",
                                 _viewModeSetting.CurrentValue(_configuration) == EquipmentSuggestViewMode.Normal))
                         {
                             _viewModeSetting.UpdateFilterConfiguration(_configuration, EquipmentSuggestViewMode.Normal);
                         }
 
-                        if (ImGui.MenuItem("Expanded", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Expanded"), "",
                                 _viewModeSetting.CurrentValue(_configuration) == EquipmentSuggestViewMode.Expanded))
                         {
                             _viewModeSetting.UpdateFilterConfiguration(_configuration,
                                 EquipmentSuggestViewMode.Expanded);
                         }
 
-                        if (ImGui.MenuItem("Compact", "",
+                        if (ImGui.MenuItem(ImGuiService.Text.Label("Compact"), "",
                                 _viewModeSetting.CurrentValue(_configuration) == EquipmentSuggestViewMode.Compact))
                         {
                             _viewModeSetting.UpdateFilterConfiguration(_configuration,
@@ -175,7 +175,7 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
                     }
                 }
 
-                using (var menu = ImRaii.Menu("Windows"))
+                using (var menu = ImRaii.Menu(ImGuiService.Text.Label("Windows")))
                 {
                     if (menu)
                     {
@@ -354,7 +354,7 @@ public class EquipmentSuggestWindow : GenericWindow, IMenuWindow
                             using (ImRaii.Tooltip())
                             {
                                 ImGui.Text(
-                                    "Hitting this will pick the highest iLvl items while also factoring in the relevant stats for the seleted class/item.");
+                                    ImGuiService.Text.Get("Hitting this will pick the highest iLvl items while also factoring in the relevant stats for the seleted class/item."));
                             }
                         }
                     }

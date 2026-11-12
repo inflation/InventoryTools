@@ -30,6 +30,7 @@ public class ImGuiTooltipService
     private readonly ItemLocalizer _itemLocalizer;
     private readonly TryOn _tryOn;
     private readonly IChatUtilities _chatUtilities;
+    private readonly UiText _text;
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     public ItemInfoRenderService InfoRenderService { get; set; }
@@ -43,7 +44,7 @@ public class ImGuiTooltipService
         ITextureProvider textureProvider,
         ItemLocalizer itemLocalizer,
         TryOn tryOn,
-        IChatUtilities chatUtilities)
+        IChatUtilities chatUtilities, UiText text)
     {
         _configuration = configuration;
         _inventoryMonitor = inventoryMonitor;
@@ -54,6 +55,7 @@ public class ImGuiTooltipService
         _itemLocalizer = itemLocalizer;
         _tryOn = tryOn;
         _chatUtilities = chatUtilities;
+        _text = text;
     }
 
     public void DrawItemTooltip(ItemInfo itemInfo)
@@ -152,7 +154,7 @@ public class ImGuiTooltipService
                                     {
                                         ImGui.NewLine();
                                         ImGui.Separator();
-                                        ImGui.Text("When HQ:");
+                                        ImGui.Text(_text.Get("When HQ:"));
                                         for (var index = 0; index < item.Base.BaseParamSpecial.Count; index++)
                                         {
                                             var baseParamSpecial = item.Base.BaseParamSpecial[index];
@@ -191,7 +193,7 @@ public class ImGuiTooltipService
                     if (item.Sources.Count > 0)
                     {
                         ImGui.NewLine();
-                        ImGui.TextUnformatted("Available From: ");
+                        ImGui.TextUnformatted(_text.Get("Available From: "));
                         ImGui.Separator();
                         ImGui.PushTextWrapPos();
                         var sources = item.Sources.Select(c => c.Type).Distinct().Select(
@@ -204,7 +206,7 @@ public class ImGuiTooltipService
                     if (item.Uses.Count > 0)
                     {
                         ImGui.NewLine();
-                        ImGui.TextUnformatted("Used In: ");
+                        ImGui.TextUnformatted(_text.Get("Used In: "));
                         ImGui.Separator();
                         ImGui.PushTextWrapPos();
                         var uses = item.Uses.Select(c => c.Type).Distinct().Select(
@@ -439,8 +441,8 @@ public class ImGuiTooltipService
                     if (storageCount > 0)
                     {
                         ImGui.Separator();
-                        ImGui.TextUnformatted($"Owned: {storageCount}");
-                        ImGui.TextUnformatted($"Locations:");
+                        ImGui.TextUnformatted(_text.Format("Owned: {0}", storageCount));
+                        ImGui.TextUnformatted(_text.Get("Locations:"));
                         using (Dalamud.Interface.Utility.Raii.ImRaii.PushIndent())
                         {
                             for (var index = 0; index < locations.Count; index++)
@@ -454,10 +456,10 @@ public class ImGuiTooltipService
                     ImGui.Separator();
                     using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
                     {
-                        ImGui.TextUnformatted("Ctrl: Link");
+                        ImGui.TextUnformatted(_text.Get("Ctrl: Link"));
                         if (item.CanTryOn)
                         {
-                            ImGui.TextUnformatted("Shift: Try on");
+                            ImGui.TextUnformatted(_text.Get("Shift: Try on"));
                         }
                     }
                 }
@@ -465,39 +467,39 @@ public class ImGuiTooltipService
         }
     }
 
-    private static void DrawBaseAttributes(ItemRow item)
+    private void DrawBaseAttributes(ItemRow item)
     {
-        ImGui.TextUnformatted($"Item Level {item.Base.LevelItem.RowId}");
+        ImGui.TextUnformatted(_text.Format("Item Level {0}", item.Base.LevelItem.RowId));
         if (item.ClassJobCategory != null)
         {
-            ImGui.TextUnformatted($"Equip Level {item.Base.LevelEquip}");
+            ImGui.TextUnformatted(_text.Format("Equip Level {0}", item.Base.LevelEquip));
         }
 
         ImGui.TextUnformatted(item.FormattedRarity);
 
         if (item.EquipRace != CharacterRace.Any && item.EquipRace != CharacterRace.None)
         {
-            ImGui.TextUnformatted($"Only equippable by {item.EquipRace}");
+            ImGui.TextUnformatted(_text.Format("Only equippable by {0}", item.EquipRace));
         }
 
         if (item.EquippableByGender != CharacterSex.Both && item.EquippableByGender != CharacterSex.NotApplicable)
         {
-            ImGui.TextUnformatted($"Only equippable by {item.EquippableByGender.ToString()}");
+            ImGui.TextUnformatted(_text.Format("Only equippable by {0}", item.EquippableByGender));
         }
 
         if (item.Base.CanBeHq)
         {
-            ImGui.TextUnformatted("Can be HQ");
+            ImGui.TextUnformatted(_text.Get("Can be HQ"));
         }
 
         if (item.Base.IsUnique)
         {
-            ImGui.TextUnformatted("Unique");
+            ImGui.TextUnformatted(_text.Get("Unique"));
         }
 
         if (item.Base.IsUntradable)
         {
-            ImGui.TextUnformatted("Untradable");
+            ImGui.TextUnformatted(_text.Get("Untradable"));
         }
     }
 }

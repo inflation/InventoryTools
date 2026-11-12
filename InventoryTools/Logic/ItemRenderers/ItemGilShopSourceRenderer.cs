@@ -72,7 +72,7 @@ public class ItemGilShopSourceRenderer : ItemInfoRenderer<ItemGilShopSource>
         var asSources = AsSource(sources);
         var firstItem = asSources[0];
 
-        ImGui.Text("Costs:");
+        ImGui.Text(Text.Get("Costs:"));
 
         using (ImRaii.PushIndent())
         {
@@ -107,7 +107,7 @@ public class ItemGilShopSourceRenderer : ItemInfoRenderer<ItemGilShopSource>
         var asSource = AsSource(source);
         var maps = source.MapIds?.Select(c => _mapSheet.GetRow(c).FormattedName).ToList() ?? new List<string>();
 
-        ImGui.Text("Costs:");
+        ImGui.Text(Text.Get("Costs:"));
 
         using (ImRaii.PushIndent())
         {

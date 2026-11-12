@@ -56,11 +56,11 @@ public class ItemListSection : ViewSection
 
     public override Action<SectionState>? DrawOptions => (sectionState) =>
     {
-        if (ImGui.Selectable("Compact View"))
+        if (ImGui.Selectable(_imGuiService.Text.Label("Compact View")))
         {
             sectionState.Set(sectionModeId, ItemListSectionMode.Grid);
         }
-        if (ImGui.Selectable("List View"))
+        if (ImGui.Selectable(_imGuiService.Text.Label("List View")))
         {
             sectionState.Set(sectionModeId, ItemListSectionMode.List);
         }

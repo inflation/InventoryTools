@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
+using InventoryTools.Localizers;
 
 namespace InventoryTools.Ui.Widgets;
 
 public class PopupMenu
 {
+    private readonly UiText _text;
     private List<IPopupMenuItem> _items;
     private PopupMenuButtons _openButtons;
     private string _id;
@@ -25,8 +27,8 @@ public class PopupMenu
 
     public interface IPopupMenuItem
     {
-        public void Draw();
-        public string? DrawPopup();
+        public void Draw(UiText text);
+        public string? DrawPopup(UiText text);
         public Func<bool>? ShouldDraw { get; }
     }
 
@@ -47,14 +49,14 @@ public class PopupMenu
             ShouldDraw = shouldDraw;
         }
 
-        public void Draw()
+        public void Draw(UiText text)
         {
 
         }
 
-        public string? DrawPopup()
+        public string? DrawPopup(UiText text)
         {
-            if (ImGui.Selectable(_name))
+            if (ImGui.Selectable(text.Label(_name)))
             {
                 _callback?.Invoke(_id);
                 return null;
@@ -62,7 +64,7 @@ public class PopupMenu
 
             if (_tooltip != null)
             {
-                OtterGui.ImGuiUtil.HoverTooltip(_tooltip);
+                OtterGui.ImGuiUtil.HoverTooltip(text.Get(_tooltip));
             }
 
             return null;
@@ -94,7 +96,7 @@ public class PopupMenu
             ShouldDraw = shouldDraw;
         }
 
-        public void Draw()
+        public void Draw(UiText text)
         {
             if (ImGuiUtil.OpenNameField(_popupName, ref _newName))
             {
@@ -103,9 +105,9 @@ public class PopupMenu
             }
         }
 
-        public string? DrawPopup()
+        public string? DrawPopup(UiText text)
         {
-            if (ImGui.Selectable(_name))
+            if (ImGui.Selectable(text.Label(_name)))
             {
                 _newName = _defaultName;
                 return _popupName;
@@ -113,7 +115,7 @@ public class PopupMenu
 
             if (_tooltip != null)
             {
-                OtterGui.ImGuiUtil.HoverTooltip(_tooltip);
+                OtterGui.ImGuiUtil.HoverTooltip(text.Get(_tooltip));
             }
 
             return null;
@@ -141,23 +143,23 @@ public class PopupMenu
             ShouldDraw = shouldDraw;
         }
 
-        public void Draw()
+        public void Draw(UiText text)
         {
             using var popup = ImRaii.Popup(_popupName);
             if (!popup)
                 return ;
 
             ImGui.TextUnformatted(
-                _question + "\nThis operation cannot be undone!\n\n");
+                text.Get(_question) + "\n" + text.Get("This operation cannot be undone!") + "\n\n");
             ImGui.Separator();
 
-            if (ImGui.Button("OK", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+            if (ImGui.Button(text.Label("OK"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
             {
                 _callback?.Invoke(_id, true);
                 ImGui.CloseCurrentPopup();
             }
             ImGui.SameLine();
-            if (ImGui.Button("Cancel", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+            if (ImGui.Button(text.Label("Cancel"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
             {
                 _callback?.Invoke(_id, false);
                 ImGui.CloseCurrentPopup();
@@ -165,16 +167,16 @@ public class PopupMenu
 
         }
 
-        public string? DrawPopup()
+        public string? DrawPopup(UiText text)
         {
-            if (ImGui.Selectable(_name))
+            if (ImGui.Selectable(text.Label(_name)))
             {
                 return _popupName;
             }
 
             if (_tooltip != null)
             {
-                OtterGui.ImGuiUtil.HoverTooltip(_tooltip);
+                OtterGui.ImGuiUtil.HoverTooltip(text.Get(_tooltip));
             }
 
             return null;
@@ -185,11 +187,11 @@ public class PopupMenu
 
     public class PopupMenuItemSeparator : IPopupMenuItem
     {
-        public void Draw()
+        public void Draw(UiText text)
         {
         }
 
-        public string? DrawPopup()
+        public string? DrawPopup(UiText text)
         {
             ImGui.Separator();
             return null;
@@ -197,9 +199,10 @@ public class PopupMenu
 
         public Func<bool>? ShouldDraw { get; }
     }
-    public PopupMenu(string id, PopupMenuButtons openButtons,List<IPopupMenuItem> items)
+    public PopupMenu(UiText text, string id, PopupMenuButtons openButtons,List<IPopupMenuItem> items)
     {
         _id = id;
+        _text = text;
         _openButtons = openButtons;
         _items = items;
     }
@@ -234,7 +237,7 @@ public class PopupMenu
                             continue;
                         }
                     }
-                    var drawPopup = item.DrawPopup();
+                    var drawPopup = item.DrawPopup(_text);
                     if (drawPopup != null)
                     {
                         newPopupName = drawPopup;
@@ -249,7 +252,7 @@ public class PopupMenu
 
         foreach (var item in _items)
         {
-            item.Draw();
+            item.Draw(_text);
         }
     }
 }

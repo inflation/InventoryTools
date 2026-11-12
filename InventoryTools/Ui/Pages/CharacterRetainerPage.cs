@@ -10,6 +10,7 @@ using CriticalCommonLib.Services.Mediator;
 using DalaMock.Host.Mediator;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using InventoryTools.Localizers;
 using InventoryTools.Mediator;
 using InventoryTools.Services;
 using DalaMock.Shared.Interfaces;
@@ -28,13 +29,15 @@ namespace InventoryTools.Ui.Pages
         private readonly IInventoryMonitor _inventoryMonitor;
         private readonly ExcelSheet<World> _worldSheet;
         private readonly IFont _font;
+        private readonly UiText _text;
 
-        public CharacterRetainerPage(ILogger<CharacterRetainerPage> logger, ImGuiService imGuiService, ICharacterMonitor characterMonitor, IInventoryMonitor inventoryMonitor, ExcelSheet<World> worldSheet, IFont font) : base(logger, imGuiService)
+        public CharacterRetainerPage(ILogger<CharacterRetainerPage> logger, ImGuiService imGuiService, ICharacterMonitor characterMonitor, IInventoryMonitor inventoryMonitor, ExcelSheet<World> worldSheet, IFont font, UiText text) : base(logger, imGuiService)
         {
             _characterMonitor = characterMonitor;
             _inventoryMonitor = inventoryMonitor;
             _worldSheet = worldSheet;
             _font = font;
+            _text = text;
         }
         private bool _isSeparator = false;
         public override void Initialize()
@@ -57,11 +60,12 @@ namespace InventoryTools.Ui.Pages
         {
             if (!_popupMenus.ContainsKey(character))
             {
-                _popupMenus[character] = new PopupMenu("cm_" + character.CharacterId, PopupMenu.PopupMenuButtons.Right,
+                var type = _text.Get(character.CharacterType.FormattedName());
+                _popupMenus[character] = new PopupMenu(ImGuiService.Text, "cm_" + character.CharacterId, PopupMenu.PopupMenuButtons.Right,
                     new List<PopupMenu.IPopupMenuItem>()
                     {
-                        new PopupMenu.PopupMenuItemSelectableConfirm("Clear Inventories", "ci_" + character.CharacterId, "Are you sure you want to clear the inventories of this " + character.CharacterType.FormattedName() + "?", ClearInventories, "Clear the inventories of this " + character.CharacterType.FormattedName() + "?"),
-                        new PopupMenu.PopupMenuItemSelectableConfirm("Delete " + character.CharacterType.FormattedName(), "dc_" + character.CharacterId, "Are you sure you want to delete this " + character.CharacterType.FormattedName() + "?", DeleteCharacter, "Delete the " + character.CharacterType.FormattedName() + "?"),
+                        new PopupMenu.PopupMenuItemSelectableConfirm(_text.Get("Clear Inventories"), "ci_" + character.CharacterId, _text.Format("Are you sure you want to clear the inventories of this {0}?", type), ClearInventories, _text.Format("Clear the inventories of this {0}?", type)),
+                        new PopupMenu.PopupMenuItemSelectableConfirm(_text.Format("Delete {0}", type), "dc_" + character.CharacterId, _text.Format("Are you sure you want to delete this {0}?", type), DeleteCharacter, _text.Format("Delete the {0}?", type)),
                     }
                 );
             }
@@ -97,17 +101,18 @@ namespace InventoryTools.Ui.Pages
                 return;
             }
 
-            ImGui.TextUnformatted("Are you sure you want to delete this " + character.CharacterType.FormattedName() + "?\nThis operation cannot be undone!\n\n");
+            ImGui.TextUnformatted(_text.Format("Are you sure you want to delete this {0}?", _text.Get(character.CharacterType.FormattedName())) +
+                                  "\n" + _text.Get("This operation cannot be undone!") + "\n\n");
             ImGui.Separator();
 
-            if (ImGui.Button("OK", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+            if (ImGui.Button(_text.Label("OK"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
             {
                 RemoveCharacter(character.CharacterId);
                 ImGui.CloseCurrentPopup();
             }
 
             ImGui.SameLine();
-            if (ImGui.Button("Cancel", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+            if (ImGui.Button(_text.Label("Cancel"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
             {
                 ImGui.CloseCurrentPopup();
             }
@@ -131,7 +136,7 @@ namespace InventoryTools.Ui.Pages
                 {
                     var worldIds = _characterMonitor.GetWorldIds();
                     var characters = _characterMonitor.GetPlayerCharacters().Where(c => _currentWorld == 0 || _currentWorld == c.Value.WorldId).OrderBy(c => c.Value.FormattedName).ToList();
-                    ImGui.TextUnformatted("Characters (" + characters.Count + ")");
+                    ImGui.TextUnformatted(_text.Format("Characters ({0})", characters.Count));
                     ImGui.Separator();
                     for (var index = 0; index < characters.Count; index++)
                     {
@@ -156,7 +161,7 @@ namespace InventoryTools.Ui.Pages
                                 tooltip += "\n" + character.Value.ActualClassJob?.Base.Name.ExtractText().ToTitleCase();
                             }
 
-                            tooltip += "\n\nRight Click: Options";
+                            tooltip += "\n\n" + _text.Get("Right Click: Options");
                             ImGuiUtil.HoverTooltip(tooltip);
                             ImGui.SameLine();
                             if (character.Value.ActualClassJob != null)
@@ -169,7 +174,7 @@ namespace InventoryTools.Ui.Pages
                     ImGui.NewLine();
 
                     var freeCompanies = _characterMonitor.GetFreeCompanies().Where(c => _currentWorld == 0 || _currentWorld == c.Value.WorldId).OrderBy(c => c.Value.FormattedName).ToList();
-                    ImGui.TextUnformatted("Free Companies (" + freeCompanies.Count + ")");
+                    ImGui.TextUnformatted(_text.Format("Free Companies ({0})", freeCompanies.Count));
                     ImGui.Separator();
                     for (var index = 0; index < freeCompanies.Count; index++)
                     {
@@ -187,7 +192,7 @@ namespace InventoryTools.Ui.Pages
                         GetCharacterMenu(freeCompany.Value).Draw();
                         var tooltip = freeCompany.Value.FormattedName;
 
-                        tooltip += "\n\nRight Click: Options";
+                        tooltip += "\n\n" + _text.Get("Right Click: Options");
                         ImGuiUtil.HoverTooltip(tooltip);
                         if (freeCompany.Value.ActualClassJob != null)
                         {
@@ -199,7 +204,7 @@ namespace InventoryTools.Ui.Pages
                     ImGui.NewLine();
 
                     var houses = _characterMonitor.GetHouses().Where(c => _currentWorld == 0 || _currentWorld == c.Value.WorldId).OrderBy(c => c.Value.FormattedName).ToList();
-                    ImGui.TextUnformatted("Residences (" + houses.Count + ")");
+                    ImGui.TextUnformatted(_text.Format("Residences ({0})", houses.Count));
                     ImGui.Separator();
                     for (var index = 0; index < houses.Count; index++)
                     {
@@ -217,7 +222,7 @@ namespace InventoryTools.Ui.Pages
                         var tooltip = house.Value.FormattedName;
                         tooltip += "\n" + house.Value.GetPlotSize().ToString();
 
-                        tooltip += "\n\nRight Click: Options";
+                        tooltip += "\n\n" + _text.Get("Right Click: Options");
                         ImGuiUtil.HoverTooltip(tooltip);
 
                         if (house.Value.ActualClassJob != null)
@@ -230,7 +235,7 @@ namespace InventoryTools.Ui.Pages
                     ImGui.NewLine();
 
                     var retainers = _characterMonitor.GetRetainerCharacters().Where(c => _currentWorld == 0 || _currentWorld == c.Value.WorldId).OrderBy(c => c.Value.FormattedName).ToList();
-                    ImGui.TextUnformatted("Retainers (" + retainers.Count + ")");
+                    ImGui.TextUnformatted(_text.Format("Retainers ({0})", retainers.Count));
                     ImGui.Separator();
 
                     for (var index = 0; index < characters.Count; index++)
@@ -259,7 +264,7 @@ namespace InventoryTools.Ui.Pages
                                 tooltip += "\n" + characterRetainer.Value.ActualClassJob?.Base.Name.ExtractText().ToTitleCase();
                             }
 
-                            tooltip += "\n\nRight Click: Options";
+                            tooltip += "\n\n" + _text.Get("Right Click: Options");
                             ImGuiUtil.HoverTooltip(tooltip);
                             if (characterRetainer.Value.ActualClassJob != null)
                             {
@@ -273,7 +278,7 @@ namespace InventoryTools.Ui.Pages
 
                     if (retainers.Count != 0)
                     {
-                        ImGui.TextUnformatted("Orphaned Retainers:");
+                        ImGui.TextUnformatted(_text.Get("Orphaned Retainers:"));
                         ImGui.Separator();
                         for (var index2 = 0; index2 < retainers.Count; index2++)
                         {
@@ -295,7 +300,7 @@ namespace InventoryTools.Ui.Pages
                                 tooltip += "\n" + characterRetainer.Value.ActualClassJob?.Base.Name.ExtractText().ToTitleCase();
                             }
 
-                            tooltip += "\n\nRight Click: Options";
+                            tooltip += "\n\n" + _text.Get("Right Click: Options");
                             ImGuiUtil.HoverTooltip(tooltip);
                             if (characterRetainer.Value.ActualClassJob != null)
                             {
@@ -314,11 +319,11 @@ namespace InventoryTools.Ui.Pages
                         selectedWorld = _worldSheet.GetRowOrDefault(_currentWorld);
                     }
 
-                    ImGui.Text("World: ");
-                    using var combo = ImRaii.Combo("##activeWorld", selectedWorld?.Name.ExtractText() ?? "All");
+                    ImGui.TextUnformatted(_text.Get("World: "));
+                    using var combo = ImRaii.Combo("##activeWorld", selectedWorld?.Name.ExtractText() ?? _text.Get("All"));
                     if (combo.Success)
                     {
-                        if (ImGui.Selectable("All"))
+                        if (ImGui.Selectable(_text.Label("All")))
                         {
                             _currentWorld = 0;
                         }
@@ -362,7 +367,7 @@ namespace InventoryTools.Ui.Pages
                                 _newName = character.AlternativeName ?? "";
                             }
 
-                            ImGuiUtil.HoverTooltip("Edit name, set the name to blank to return it to the original name.");
+                            ImGuiUtil.HoverTooltip(_text.Get("Edit name, set the name to blank to return it to the original name."));
 
                             ImGui.SameLine();
                             cursorX = ImGui.GetCursorPosX();
@@ -371,13 +376,13 @@ namespace InventoryTools.Ui.Pages
                                 ImGui.OpenPopup("deleteCharacterConfirm");
                             }
 
-                            ImGuiUtil.HoverTooltip("Delete this " + character.CharacterType.FormattedName() + " and its inventories.");
+                            ImGuiUtil.HoverTooltip(_text.Format("Delete this {0} and its inventories.", _text.Get(character.CharacterType.FormattedName())));
                             DrawDeleteConfirmPopup(character);
 
                             if (_editMode)
                             {
                                 var newName = _newName;
-                                ImGui.Text("Custom Name: ");
+                                ImGui.TextUnformatted(_text.Get("Custom Name: "));
                                 ImGui.SameLine();
                                 if (ImGui.InputText("##customName", ref newName, 100))
                                 {
@@ -386,10 +391,10 @@ namespace InventoryTools.Ui.Pages
 
                                 if (character.AlternativeName != null && character.AlternativeName != character.Name)
                                 {
-                                    ImGui.Text("Original Name: " + character.Name);
+                                    ImGui.TextUnformatted(_text.Get("Original Name: ") + character.Name);
                                 }
 
-                                if (ImGui.Button("Save"))
+                                if (ImGui.Button(_text.Label("Save")))
                                 {
                                     if (_newName == "" || _newName == character.Name)
                                     {
@@ -410,31 +415,31 @@ namespace InventoryTools.Ui.Pages
                             ImGui.Separator();
                             if (character.CharacterType is CharacterType.Character or CharacterType.Retainer )
                             {
-                                ImGui.Text("Level: " + character.Level);
-                                ImGui.Text("Gil: " + character.Gil);
-                                ImGui.Text("Gender: " + character.Gender);
-                                ImGui.Text("Free Company: " + character.FreeCompanyName);
-                                ImGui.Text("World: " + (character.World?.Name.ExtractText() ?? "Unknown"));
-                                ImGui.Text("Class/Job: " +
-                                           (character.ActualClassJob?.Base.Name.ExtractText().ToTitleCase() ?? "Unknown"));
+                                ImGui.TextUnformatted(_text.Get("Level: ") + character.Level);
+                                ImGui.TextUnformatted(_text.Get("Gil: ") + character.Gil);
+                                ImGui.TextUnformatted(_text.Get("Gender: ") + character.Gender);
+                                ImGui.TextUnformatted(_text.Get("Free Company: ") + character.FreeCompanyName);
+                                ImGui.TextUnformatted(_text.Get("World: ") + (character.World?.Name.ExtractText() ?? _text.Get("Unknown")));
+                                ImGui.TextUnformatted(_text.Get("Class/Job: ") +
+                                           (character.ActualClassJob?.Base.Name.ExtractText().ToTitleCase() ?? _text.Get("Unknown")));
                             }
                             else if (character.CharacterType is CharacterType.Housing)
                             {
-                                ImGui.Text("World: " + (character.World?.Name.ExtractText() ?? "Unknown"));
-                                ImGui.Text("Plot Size: " + character.GetPlotSize());
-                                ImGui.Text("Location: " + character.HousingName);
-                                ImGui.Text("Owners: ");
+                                ImGui.TextUnformatted(_text.Get("World: ") + (character.World?.Name.ExtractText() ?? _text.Get("Unknown")));
+                                ImGui.TextUnformatted(_text.Get("Plot Size: ") + character.GetPlotSize());
+                                ImGui.TextUnformatted(_text.Get("Location: ") + character.HousingName);
+                                ImGui.TextUnformatted(_text.Get("Owners: "));
                                 foreach (var ownerId in character.Owners)
                                 {
                                     var owner = _characterMonitor.GetCharacterById(ownerId);
-                                    var ownerName = owner?.FormattedName ?? "Missing Character";
+                                    var ownerName = owner?.FormattedName ?? _text.Get("Missing Character");
                                     ImGui.Text(ownerName);
                                 }
                             }
                             else if (character.CharacterType is CharacterType.FreeCompanyChest)
                             {
-                                ImGui.Text("World: " + (character.World?.Name.ExtractText() ?? "Unknown"));
-                                ImGui.Text("Related Characters: ");
+                                ImGui.TextUnformatted(_text.Get("World: ") + (character.World?.Name.ExtractText() ?? _text.Get("Unknown")));
+                                ImGui.TextUnformatted(_text.Get("Related Characters: "));
                                 foreach (var relatedCharacter in _characterMonitor.GetFreeCompanyCharacters(character.CharacterId))
                                 {
                                     var relatedCharacterName = relatedCharacter.Value.FormattedName;
@@ -443,7 +448,7 @@ namespace InventoryTools.Ui.Pages
                             }
 
                             ImGui.NewLine();
-                            ImGui.Text("Inventories: ");
+                            ImGui.TextUnformatted(_text.Get("Inventories: "));
                             ImGui.Separator();
                             var inventories =
                                 _inventoryMonitor.Inventories.ContainsKey(character.CharacterId)
@@ -460,7 +465,7 @@ namespace InventoryTools.Ui.Pages
                                         foreach (var category in categories)
                                         {
                                             var inventoryWidth = 5;
-                                            using (var tabItem = ImRaii.TabItem(category.Key.FormattedName()))
+                                            using (var tabItem = ImRaii.TabItem(_text.Label(category.Key.FormattedName())))
                                             {
                                                 if (tabItem.Success)
                                                 {
@@ -471,7 +476,7 @@ namespace InventoryTools.Ui.Pages
                                                             var itemsByType = category.Value.GroupBy(c => c.SortedContainer);
                                                             foreach (var type in itemsByType)
                                                             {
-                                                                using (var typeChild = ImRaii.TabItem(type.Key.FormattedName()))
+                                                                using (var typeChild = ImRaii.TabItem(_text.Label(type.Key.FormattedName())))
                                                                 {
                                                                     if (typeChild.Success)
                                                                     {
@@ -549,13 +554,13 @@ namespace InventoryTools.Ui.Pages
                             }
                             else
                             {
-                                ImGui.Text("No inventories found.");
+                                ImGui.TextUnformatted(_text.Get("No inventories found."));
                             }
 
                         }
                         else
                         {
-                            ImGui.Text("Invalid character selected.");
+                            ImGui.TextUnformatted(_text.Get("Invalid character selected."));
                         }
                     }
                 }

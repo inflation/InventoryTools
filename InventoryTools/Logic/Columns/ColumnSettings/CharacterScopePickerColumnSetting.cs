@@ -20,13 +20,15 @@ public class CharacterScopePickerColumnSetting : ColumnSetting<List<CharacterSea
     private readonly CharacterScopePicker _scopePicker;
     private readonly CharacterScopeCalculator _scopeCalculator;
     private readonly ICharacterMonitor _characterMonitor;
+    private readonly ImGuiService _imGuiService;
     private List<Character>? _characters;
 
-    public CharacterScopePickerColumnSetting(CharacterScopePicker scopePicker, CharacterScopeCalculator scopeCalculator, ICharacterMonitor characterMonitor)
+    public CharacterScopePickerColumnSetting(CharacterScopePicker scopePicker, CharacterScopeCalculator scopeCalculator, ICharacterMonitor characterMonitor, ImGuiService imGuiService)
     {
         _scopePicker = scopePicker;
         _scopeCalculator = scopeCalculator;
         _characterMonitor = characterMonitor;
+        _imGuiService = imGuiService;
     }
     public override List<CharacterSearchScope>? CurrentValue(ColumnConfiguration configuration)
     {
@@ -86,7 +88,7 @@ public class CharacterScopePickerColumnSetting : ColumnSetting<List<CharacterSea
 
         var currentValue = CurrentValue(configuration);
         using var disabled = ImRaii.Disabled(currentValue == null);
-        if (ImGui.Button("Test Scopes"))
+        if (ImGui.Button(_imGuiService.Text.Label("Test Scopes")))
         {
             if (currentValue != null)
             {
@@ -98,7 +100,7 @@ public class CharacterScopePickerColumnSetting : ColumnSetting<List<CharacterSea
         if (_characters is not null && currentValue is not null)
         {
             ImGui.Separator();
-            ImGui.Text("The following characters will be searched in: ");
+            ImGui.Text(_imGuiService.Text.Get("The following characters will be searched in: "));
             foreach (var s in _characters)
             {
                 ImGui.TextUnformatted(s.Name);

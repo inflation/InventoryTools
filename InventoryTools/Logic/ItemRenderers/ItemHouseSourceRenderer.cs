@@ -34,7 +34,7 @@ public abstract class ItemHouseSourceRenderer<T> : ItemInfoRenderer<T> where T :
         var setName = asSource.HousingPreset.Value.Singular.ExtractText();
         if (setName == string.Empty)
         {
-            ImGui.Text("Not default in any house.");
+            ImGui.Text(Text.Get("Not default in any house."));
         }
         else
         {

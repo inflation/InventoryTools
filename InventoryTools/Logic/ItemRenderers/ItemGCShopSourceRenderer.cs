@@ -31,7 +31,7 @@ public class ItemGCShopUseRenderer : ItemGCShopSourceRenderer
     {
         var asSources = AsSource(sources);
 
-        ImGui.Text("Items that can be purchased:");
+        ImGui.Text(Text.Get("Items that can be purchased:"));
 
         using (ImRaii.PushIndent())
         {

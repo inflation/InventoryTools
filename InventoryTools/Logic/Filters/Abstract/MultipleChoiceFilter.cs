@@ -115,7 +115,7 @@ namespace InventoryTools.Logic.Filters.Abstract
                     }
                     var activeChoices = GetActiveChoices(configuration);
                     ImGui.SameLine();
-                    if (ImGui.Button("Add All"))
+                    if (ImGui.Button(ImGuiService.Text.Label("Add All")))
                     {
                         foreach (var item in activeChoices)
                         {

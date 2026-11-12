@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using CriticalCommonLib.Services.Mediator;
 using DalaMock.Host.Mediator;
 using Dalamud.Bindings.ImGui;
+using InventoryTools.Localizers;
 using InventoryTools.Logic.Columns.Abstract.ColumnSettings;
 
 namespace InventoryTools.Logic.Columns.Abstract;
 
 public abstract class ButtonColumn : IColumn
 {
+    public UiText? Text { get; set; }
+
     public virtual void Dispose()
     {
 
@@ -112,7 +115,8 @@ public abstract class ButtonColumn : IColumn
             imGuiTableColumnFlags |= ImGuiTableColumnFlags.NoHeaderLabel;
         }
 
-        var tableName = columnConfiguration.Name ?? (RenderName ?? Name);
+        var name = RenderName ?? Name;
+        var tableName = columnConfiguration.Name ?? Text?.Get(name) ?? name;
         ImGui.TableSetupColumn(tableName, imGuiTableColumnFlags, Width, (uint)columnIndex);
     }
 

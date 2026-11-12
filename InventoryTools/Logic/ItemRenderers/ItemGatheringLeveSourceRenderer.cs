@@ -60,7 +60,7 @@ public class ItemGatheringLeveSourceRenderer : ItemInfoRenderer<ItemGatheringLev
         ImGui.TextUnformatted("Allowance Cost: " + leveRow.AllowanceCost);
         ImGui.TextUnformatted("Loot Chance: " + asSource.LeveRewardItem.Value.ProbabilityPercent[asSource.RewardItemIndex] + "%");
 
-        ImGui.TextUnformatted("Reward Items: ");
+        ImGui.TextUnformatted(Text.Get("Reward Items: "));
         using (ImRaii.PushIndent())
         {
             for (var itemGroupIndex = 0; itemGroupIndex < asSource.Leve.Value.LeveRewardItem.Value.LeveRewardItemGroup.Count; itemGroupIndex++)

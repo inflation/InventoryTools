@@ -46,7 +46,7 @@ namespace InventoryTools.Logic.Filters
         public override void Draw(FilterConfiguration configuration)
         {
             ImGui.NewLine();
-            ImGui.Text("Destination Information: ");
+            ImGui.Text(ImGuiService.Text.Get("Destination Information: "));
             ImGui.SameLine();
             ImGuiService.HelpMarker(GetHelpText(configuration));
             var allCharacters = _characterMonitor.Characters;

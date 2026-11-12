@@ -68,7 +68,7 @@ public class ItemSpecialShopSourceRenderer : ItemInfoRenderer<ItemSpecialShopSou
 
         ImGui.Text($"Shop: {asSource.Shop.Name}");
 
-        ImGui.Text("Rewards:");
+        ImGui.Text(Text.Get("Rewards:"));
         using (ImRaii.PushIndent())
         {
             foreach (var reward in asSource.ShopListing.Rewards)
@@ -87,7 +87,7 @@ public class ItemSpecialShopSourceRenderer : ItemInfoRenderer<ItemSpecialShopSou
                 }
             }
         }
-        ImGui.Text("Costs:");
+        ImGui.Text(Text.Get("Costs:"));
         using (ImRaii.PushIndent())
         {
             foreach (var cost in asSource.ShopListing.Costs)

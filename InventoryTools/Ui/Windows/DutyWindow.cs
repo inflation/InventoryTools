@@ -85,7 +85,7 @@ namespace InventoryTools.Ui
             }
             else
             {
-                WindowName = "Invalid Duty";
+                WindowName = ImGuiService.Text.Label("Invalid Duty");
                 Key = "cfcid_unknown";
                 DungeonChestItems = new HashSet<uint>();
             }
@@ -108,14 +108,14 @@ namespace InventoryTools.Ui
         {
             if (ContentFinderCondition == null)
             {
-                ImGui.TextUnformatted("Dungeon with the ID " + _contentFinderConditionId + " could not be found.");
+                ImGui.TextUnformatted(ImGuiService.Text.Format("Dungeon with the ID {0} could not be found.", _contentFinderConditionId));
             }
             else
             {
                 ImGui.TextUnformatted(ContentFinderCondition.Base.Name.ExtractText());
                 ImGui.TextUnformatted(ContentFinderCondition.Base.ContentType.ValueNullable?.Name.ToString() ?? "Unknown Content Type");
-                ImGui.TextUnformatted("Level Required: " + ContentFinderCondition.Base.ClassJobLevelRequired);
-                ImGui.TextUnformatted("Item Level Required: " + ContentFinderCondition.Base.ItemLevelRequired);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Level Required: ") + ContentFinderCondition.Base.ClassJobLevelRequired);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Item Level Required: ") + ContentFinderCondition.Base.ItemLevelRequired);
                 ;
                 var itemIcon = ImGuiService.GetIconTexture((int)(ContentFinderCondition.Base.ContentType.ValueNullable?.IconDutyFinder ?? Icons.DutyIcon));
                 ImGui.Image(itemIcon.Handle, new Vector2(100, 100) * ImGui.GetIO().FontGlobalScale);
@@ -341,7 +341,7 @@ namespace InventoryTools.Ui
                 #if DEBUG
                 if (ImGui.CollapsingHeader("Debug"))
                 {
-                    ImGui.TextUnformatted("Duty ID: " + _contentFinderConditionId);
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Duty ID: ") + _contentFinderConditionId);
                     Utils.PrintOutObject(ContentFinderCondition, 0, new List<string>());
                 }
                 #endif

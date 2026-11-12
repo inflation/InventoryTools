@@ -36,7 +36,7 @@ namespace InventoryTools.Logic.Settings.Abstract
         public override void Draw(InventoryToolsConfiguration configuration, string? customName, bool? disableReset,
             bool? disableColouring)
         {
-            Widget.ModifiableKeySelector(customName ?? Name, HelpText, InputSize, CurrentValue(configuration),
+            Widget.ModifiableKeySelector(ImGuiService.Text.Get(customName ?? Name), ImGuiService.Text.Get(HelpText), InputSize, CurrentValue(configuration),
                 delegate(ModifiableHotkey hotkey)
                 {
                     UpdateFilterConfiguration(configuration, hotkey);

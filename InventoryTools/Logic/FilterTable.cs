@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -19,6 +19,7 @@ using Newtonsoft.Json.Converters;
 using OtterGui;
 using Dalamud.Interface.Utility.Raii;
 using InventoryTools.Logic.Columns;
+using InventoryTools.Localizers;
 using InventoryTools.Logic.Settings;
 using InventoryTools.Services;
 
@@ -28,7 +29,7 @@ namespace InventoryTools.Logic
     {
         private readonly IFont _font;
 
-        public FilterTable(ImGuiMenuService imGuiMenuService, ImGuiTooltipService imGuiTooltipService, InventoryToolsConfiguration configuration, ImGuiTooltipModeSetting tooltipModeSetting, IFont font) : base(imGuiMenuService, imGuiTooltipService, tooltipModeSetting, configuration)
+        public FilterTable(ImGuiMenuService imGuiMenuService, ImGuiTooltipService imGuiTooltipService, InventoryToolsConfiguration configuration, ImGuiTooltipModeSetting tooltipModeSetting, IFont font, UiText text) : base(imGuiMenuService, imGuiTooltipService, tooltipModeSetting, configuration, text)
         {
             _font = font;
         }
@@ -260,7 +261,7 @@ namespace InventoryTools.Logic
                             {
                                 ImGuiUtil.RightAlign("?", SortColumn == index ? 8 : 0);
                             }
-                            ImGuiUtil.HoverTooltip(column.Column.HelpText);
+                            ImGuiUtil.HoverTooltip(Text.Get(column.Column.HelpText));
                         }
 
                         var currentSortSpecs = ImGui.TableGetSortSpecs();

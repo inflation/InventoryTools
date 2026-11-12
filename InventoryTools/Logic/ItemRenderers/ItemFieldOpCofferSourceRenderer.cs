@@ -34,7 +34,7 @@ public abstract class ItemFieldOpCofferSourceRenderer<T> : ItemInfoRenderer<T> w
             ImGui.SameLine();
             if (asSource.Min == asSource.Max)
             {
-                ImGui.Text("(Drops 1)");
+                ImGui.Text(Text.Get("(Drops 1)"));
             }
             else
             {

@@ -15,6 +15,7 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Bindings.ImGui;
 using InventoryTools.Extensions;
+using InventoryTools.Localizers;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
@@ -27,6 +28,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
     public IDalamudPluginInterface DalamudPluginInterface { get; }
     public ItemSheet ItemSheet { get; }
     public MapSheet MapSheet { get; }
+    public UiText Text { get; set; } = null!;
 
     public ItemInfoRenderer(ITextureProvider textureProvider, IDalamudPluginInterface dalamudPluginInterface,
         ItemSheet itemSheet, MapSheet mapSheet)
@@ -43,7 +45,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
         {
             return;
         }
-        ImGui.TextUnformatted(sectionName);
+        ImGui.TextUnformatted(Text.Get(sectionName));
         using (ImRaii.PushIndent())
         {
             foreach (var itemInfo in items)
@@ -59,7 +61,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
                 ImGui.SameLine();
                 if (itemInfo.Count == null)
                 {
-                    ImGui.TextUnformatted($"{item.NameString}" + (itemInfo.IsOptional ?? false ? " (Optional)" : ""));
+                    ImGui.TextUnformatted(item.NameString + (itemInfo.IsOptional == true ? Text.Get(" (Optional)") : ""));
                 }
                 else
                 {
@@ -70,7 +72,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
                     ImGui.SameLine();
                     if (itemInfo.Min == itemInfo.Max)
                     {
-                        ImGui.Text("(Drops 1)");
+                        ImGui.Text(Text.Get("(Drops 1)"));
                     }
                     else
                     {
@@ -119,7 +121,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
 
         if (maps.Count != 0)
         {
-            ImGui.Text("Maps:");
+            ImGui.Text(Text.Get("Maps:"));
             using (ImRaii.PushIndent())
             {
                 foreach (var map in maps)
@@ -141,7 +143,7 @@ public abstract class ItemInfoRenderer<T> : IItemInfoRenderer where T : ItemSour
 
         if (maps.Count != 0)
         {
-            ImGui.Text("Maps:");
+            ImGui.Text(Text.Get("Maps:"));
             using (ImRaii.PushIndent())
             {
                 foreach (var map in maps)

@@ -156,7 +156,7 @@ public class CraftIngredientPreferenceFilter : SortedListFilter<(IngredientPrefe
             {
                 using (ImRaii.Tooltip())
                 {
-                    ImGui.Text("Click and drag to reorder");
+                    ImGui.Text(ImGuiService.Text.Get("Click and drag to reorder"));
                 }
             }
 
@@ -226,7 +226,7 @@ public class CraftIngredientPreferenceFilter : SortedListFilter<(IngredientPrefe
 
         var currentValue = CurrentValue(configuration);
 
-        ImGui.TextUnformatted("Add Preference:");
+        ImGui.TextUnformatted(ImGuiService.Text.Get("Add Preference:"));
         ImGui.SameLine();
         ImGui.SetNextItemWidth(LabelSize);
         using (var combo = ImRaii.Combo("##Add" + Key, "", ImGuiComboFlags.HeightLarge))
@@ -243,7 +243,7 @@ public class CraftIngredientPreferenceFilter : SortedListFilter<(IngredientPrefe
             }
         }
         ImGui.SameLine();
-        ImGui.TextUnformatted("Add Item Preference:");
+        ImGui.TextUnformatted(ImGuiService.Text.Get("Add Item Preference:"));
         ImGui.SameLine();
         ImGui.SetNextItemWidth(LabelSize);
         using (var combo = ImRaii.Combo("##AddItem" + Key, "", ImGuiComboFlags.HeightLarge))
@@ -260,7 +260,7 @@ public class CraftIngredientPreferenceFilter : SortedListFilter<(IngredientPrefe
                 ImGui.Separator();
                 if (_searchString == "")
                 {
-                    ImGui.TextUnformatted("Start typing to search...");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Start typing to search..."));
                 }
 
                 foreach (var item in SearchItems.Where(c => !currentValue.ContainsKey((IngredientPreferenceType.Item, c.RowId))))
@@ -275,7 +275,7 @@ public class CraftIngredientPreferenceFilter : SortedListFilter<(IngredientPrefe
 
         var resetWidth = ImGui.CalcTextSize("Reset to Default").X + ImGui.GetStyle().FramePadding.X * 2;
         ImGui.SameLine(ImGui.GetContentRegionMax().X - resetWidth);
-        if (ImGui.Button("Reset to Default##IngredientPref"))
+        if (ImGui.Button(ImGuiService.Text.Label("Reset to Default##IngredientPref")))
         {
             _popupService.AddPopup(new ConfirmPopup(typeof(CraftsWindow), "resetIngredientPref",
                 "Are you sure you want to reset the ingredient sourcing order to default?",

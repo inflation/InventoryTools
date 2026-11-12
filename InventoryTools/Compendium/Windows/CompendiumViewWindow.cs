@@ -97,7 +97,7 @@ public class CompendiumViewWindow : CompendiumWindow
 #if DEBUG
         if (ImGui.CollapsingHeader("Debug"))
         {
-            ImGui.TextUnformatted("Entity ID: " + _entityId);
+            ImGui.TextUnformatted(ImGuiService.Text.Get("Entity ID: ") + _entityId);
             var relatedObject = _compendiumType.GetObject(_entityId);
             if (relatedObject != null)
             {
@@ -129,26 +129,26 @@ public class CompendiumViewWindow : CompendiumWindow
             {
                 if (menuBar)
                 {
-                    using (var menu = ImRaii.Menu("File"))
+                    using (var menu = ImRaii.Menu(ImGuiService.Text.Label("File")))
                     {
                         if (menu)
                         {
-                            if (ImGui.MenuItem("Configuration"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Configuration")))
                             {
                                 this.MediatorService.Publish(new OpenGenericWindowMessage(typeof(ConfigurationWindow)));
                             }
 
-                            if (ImGui.MenuItem("Changelog"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Changelog")))
                             {
                                 this.MediatorService.Publish(new OpenGenericWindowMessage(typeof(ChangelogWindow)));
                             }
 
-                            if (ImGui.MenuItem("Help"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Help")))
                             {
                                 this.MediatorService.Publish(new OpenGenericWindowMessage(typeof(HelpWindow)));
                             }
 
-                            if (ImGui.MenuItem("Enable Verbose Logging", "",
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Enable Verbose Logging"), "",
                                     this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose))
                             {
                                 if (this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose)
@@ -161,12 +161,12 @@ public class CompendiumViewWindow : CompendiumWindow
                                 }
                             }
 
-                            if (ImGui.MenuItem("Generate Support Dump"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Generate Support Dump")))
                             {
                                 this.MediatorService.Publish(new OpenGenericWindowMessage(typeof(SupportDumpWindow)));
                             }
 
-                            if (ImGui.MenuItem("Report a Issue"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Report a Issue")))
                             {
                                 "https://github.com/Critical-Impact/InventoryTools".OpenBrowser();
                             }
@@ -176,20 +176,20 @@ public class CompendiumViewWindow : CompendiumWindow
                                 "https://ko-fi.com/critical_impact".OpenBrowser();
                             }
 
-                            if (ImGui.MenuItem("Close"))
+                            if (ImGui.MenuItem(ImGuiService.Text.Label("Close")))
                             {
                                 this.IsOpen = false;
                             }
                         }
                     }
 
-                    using (var menu = ImRaii.Menu("Windows"))
+                    using (var menu = ImRaii.Menu(ImGuiService.Text.Label("Windows")))
                     {
                         if (menu)
                         {
                             foreach (var window in _menuWindows)
                             {
-                                if (ImGui.MenuItem(window.GenericName))
+                                if (ImGui.MenuItem(ImGuiService.Text.Label(window.GenericName)))
                                 {
                                     this.MediatorService.Publish(new OpenGenericWindowMessage(window.GetType()));
                                 }
@@ -197,13 +197,13 @@ public class CompendiumViewWindow : CompendiumWindow
                         }
                     }
 
-                    using (var menu = ImRaii.Menu("Compendium"))
+                    using (var menu = ImRaii.Menu(ImGuiService.Text.Label("Compendium")))
                     {
                         if (menu)
                         {
                             foreach (var compendiumType in _compendiumTypes)
                             {
-                                if (ImGui.MenuItem(compendiumType.Plural))
+                                if (ImGui.MenuItem(ImGuiService.Text.Label(compendiumType.Plural)))
                                 {
                                     this.MediatorService.Publish(new ToggleCompendiumListMessage(compendiumType));
                                 }
@@ -215,7 +215,7 @@ public class CompendiumViewWindow : CompendiumWindow
                     {
                         using (ImRaii.Tooltip())
                         {
-                            ImGui.Text("Compendium is a WIP feature, expect more here soon!");
+                            ImGui.Text(ImGuiService.Text.Get("Compendium is a WIP feature, expect more here soon!"));
                         }
                     }
 

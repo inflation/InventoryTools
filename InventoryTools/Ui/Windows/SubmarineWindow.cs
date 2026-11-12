@@ -48,7 +48,7 @@ namespace InventoryTools.Ui
             }
             else
             {
-                WindowName = "Invalid Submarine Exploration";
+                WindowName = ImGuiService.Text.Label("Invalid Submarine Exploration");
                 Key = "sepid_invalid";
                 _drops = new List<ItemRow>();
             }
@@ -65,13 +65,13 @@ namespace InventoryTools.Ui
         {
             if (SubmarineExploration == null)
             {
-                ImGui.TextUnformatted("Submarine Exploration Point with the ID " + _submarineExplorationPointId + " could not be found.");
+                ImGui.TextUnformatted(ImGuiService.Text.Format("Submarine Exploration Point with the ID {0} could not be found.", _submarineExplorationPointId));
             }
             else
             {
                 ImGui.TextUnformatted(SubmarineExploration.Base.Destination.ExtractText());
-                ImGui.TextUnformatted("Unlocked Via: " + SubmarineExploration.Unlock?.Base.Destination.ExtractText() ?? "N/A");
-                ImGui.TextUnformatted("Rank Required: " + SubmarineExploration.Base.RankReq);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Unlocked Via: ") + SubmarineExploration.Unlock?.Base.Destination.ExtractText() ?? "N/A");
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Rank Required: ") + SubmarineExploration.Base.RankReq);
                 ;
                 ImGui.Image(ImGuiService.GetIconTexture(Icons.AirshipIcon).Handle, new Vector2(100, 100) * ImGui.GetIO().FontGlobalScale);
 
@@ -123,7 +123,7 @@ namespace InventoryTools.Ui
                 #if DEBUG
                 if (ImGui.CollapsingHeader("Debug"))
                 {
-                    ImGui.TextUnformatted("Duty ID: " + _submarineExplorationPointId);
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Duty ID: ") + _submarineExplorationPointId);
                     Utils.PrintOutObject(SubmarineExploration, 0, new List<string>());
                 }
                 #endif

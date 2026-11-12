@@ -31,7 +31,7 @@ public class ItemGlamourReadySetItemSourceRenderer : ItemInfoRenderer<ItemGlamou
         ImGui.Text("Transforms into: " + asSource.ConvertedItem.NameString);
         if (asSource.SetItems.Count > 1)
         {
-            ImGui.Text("Set Items:");
+            ImGui.Text(Text.Get("Set Items:"));
             using (ImRaii.PushIndent())
             {
                 foreach (var item in asSource.SetItems)

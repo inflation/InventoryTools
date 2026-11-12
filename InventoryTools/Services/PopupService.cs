@@ -4,6 +4,7 @@ using System.Numerics;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using InventoryTools.Localizers;
 
 namespace InventoryTools.Services;
 
@@ -11,8 +12,11 @@ public class PopupService : IDisposable
 {
     private List<IPopup> _popups;
     private Queue<IPopup> _toOpen;
-    public PopupService()
+    private readonly UiText _text;
+
+    public PopupService(UiText text)
     {
+        _text = text;
         _popups = new();
         _toOpen = new();
     }
@@ -29,7 +33,7 @@ public class PopupService : IDisposable
             var popup = _popups[index];
             if (popup.Window == windowType)
             {
-                popup.Draw();
+                popup.Draw(_text);
             }
         }
     }
@@ -82,7 +86,7 @@ public class NamePopup : IPopup
     public Type Window => _window;
     public string Id => _id;
 
-    public void Draw()
+    public void Draw(UiText text)
     {
         using var popup = ImRaii.Popup(_id);
         if (!popup)
@@ -111,7 +115,7 @@ public class NamePopup : IPopup
             ImGui.SetKeyboardFocusHere();
         }
 
-        var enterPressed = ImGui.InputTextWithHint("##newName", "Enter New Name...", ref _name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
+        var enterPressed = ImGui.InputTextWithHint("##newName", text.Get("Enter New Name..."), ref _name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
 
         if (!enterPressed)
         {
@@ -151,7 +155,7 @@ public class MultiLineTextPopup : IPopup
     public Type Window => _window;
     public string Id => _id;
 
-    public void Draw()
+    public void Draw(UiText text)
     {
         using var popup = ImRaii.Popup(_id);
         if (!popup)
@@ -174,7 +178,7 @@ public class MultiLineTextPopup : IPopup
             return;
         }
 
-        ImGui.TextWrapped(_explanation);
+        ImGui.TextWrapped(text.Get(_explanation));
         ImGui.Separator();
 
         ImGui.SetNextItemWidth(400 * ImGuiHelpers.GlobalScale);
@@ -188,7 +192,7 @@ public class MultiLineTextPopup : IPopup
 
         ImGui.Separator();
 
-        if (ImGui.Button("OK", new System.Numerics.Vector2(100, 0)))
+        if (ImGui.Button(text.Label("OK"), new System.Numerics.Vector2(100, 0)))
         {
             _callback.Invoke((true, _text));
             Finalized?.Invoke(this);
@@ -197,7 +201,7 @@ public class MultiLineTextPopup : IPopup
 
         ImGui.SameLine();
 
-        if (ImGui.Button("Cancel", new System.Numerics.Vector2(100, 0)))
+        if (ImGui.Button(text.Label("Cancel"), new System.Numerics.Vector2(100, 0)))
         {
             _callback.Invoke((false, _text));
             Finalized?.Invoke(this);
@@ -229,24 +233,24 @@ public class ConfirmPopup : IPopup
     public Type Window => _window;
     public string Id => _id;
 
-    public void Draw()
+    public void Draw(UiText text)
     {
         using var popup = ImRaii.Popup(_id);
         if (!popup)
             return ;
 
         ImGui.TextUnformatted(
-            _question + "\nThis operation cannot be undone!\n\n");
+            text.Get(_question) + "\n" + text.Get("This operation cannot be undone!") + "\n\n");
         ImGui.Separator();
 
-        if (ImGui.Button("OK", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+        if (ImGui.Button(text.Label("OK"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
         {
             _callback?.Invoke(true);
             ImGui.CloseCurrentPopup();
             Finalized?.Invoke(this);
         }
         ImGui.SameLine();
-        if (ImGui.Button("Cancel", new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
+        if (ImGui.Button(text.Label("Cancel"), new Vector2(120, 0) * ImGui.GetIO().FontGlobalScale))
         {
             _callback?.Invoke(false);
             ImGui.CloseCurrentPopup();
@@ -264,7 +268,7 @@ public interface IPopup
 {
     public Type Window { get; }
     string Id { get; }
-    void Draw();
+    void Draw(UiText text);
     void Finalize();
     delegate void FinalizedDelegate(IPopup popup);
     public event FinalizedDelegate? Finalized;

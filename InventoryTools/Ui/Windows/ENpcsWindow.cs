@@ -45,7 +45,7 @@ public class ENpcsWindow : GenericTabbedTable<ENpcResidentRow>, IMenuWindow
 
     public override void Initialize()
     {
-        WindowName = "NPCs";
+        WindowName = ImGuiService.Text.Label("NPCs");
         Key = "enpcs";
          _columns = new List<TableColumn<ENpcResidentRow>>()
         {
@@ -133,11 +133,11 @@ public class ENpcsWindow : GenericTabbedTable<ENpcResidentRow>, IMenuWindow
                 {
                     if (ex.ENpcBase.IsVendor)
                     {
-                        ImGui.Text("Yes");
+                        ImGui.Text(ImGuiService.Text.Get("Yes"));
                     }
                     else
                     {
-                        ImGui.Text("No");
+                        ImGui.Text(ImGuiService.Text.Get("No"));
                     }
                 }
             },

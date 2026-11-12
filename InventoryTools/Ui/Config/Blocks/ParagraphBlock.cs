@@ -21,7 +21,7 @@ public sealed class ParagraphBlock : IConfigBlock
     {
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
         {
-            ImGui.TextWrapped(_text);
+            ImGui.TextWrapped(context.ImGuiService.Text.Get(_text));
         }
 
         ImGui.Spacing();

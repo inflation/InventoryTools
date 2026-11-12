@@ -69,7 +69,7 @@ public class SourceWindow : GenericTabbedTable<(SourceType, ItemInfoType)>
     public override void Initialize()
     {
         Key = "submarines";
-        WindowName = "Submarines";
+        WindowName = ImGuiService.Text.Label("Submarines");
         _columns = new List<TableColumn<(SourceType, ItemInfoType)>>()
         {
             new("Name", 200, ImGuiTableColumnFlags.WidthFixed)

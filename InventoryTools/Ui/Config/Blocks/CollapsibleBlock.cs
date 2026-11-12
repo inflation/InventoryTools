@@ -20,7 +20,7 @@ public sealed class CollapsibleBlock : IConfigBlock
     public void Draw(ConfigDrawContext context)
     {
         var flags = _defaultOpen ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.None;
-        if (ImGui.CollapsingHeader(Title, flags))
+        if (ImGui.CollapsingHeader(context.ImGuiService.Text.Label(Title), flags))
         {
             ImGui.Indent();
             try

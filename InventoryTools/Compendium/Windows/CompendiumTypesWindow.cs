@@ -41,7 +41,7 @@ public class CompendiumTypesWindow : GenericWindow
         var style = ImGui.GetStyle();
 
         ImGui.SetNextItemWidth(-1);
-        ImGui.InputTextWithHint("##compendium_search", "Search compendium...", ref _search, 100);
+        ImGui.InputTextWithHint("##compendium_search", ImGuiService.Text.Get("Search compendium..."), ref _search, 100);
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -58,7 +58,13 @@ public class CompendiumTypesWindow : GenericWindow
 
         foreach (var compendiumType in _compendiumTypes)
         {
-            if (!string.IsNullOrWhiteSpace(_search) && !(compendiumType.Plural.Contains(_search, StringComparison.OrdinalIgnoreCase) || compendiumType.Description.Contains(_search, StringComparison.OrdinalIgnoreCase)))
+            var name = ImGuiService.Text.Get(compendiumType.Plural);
+            var description = ImGuiService.Text.Get(compendiumType.Description);
+            if (!string.IsNullOrWhiteSpace(_search) &&
+                !name.Contains(_search, StringComparison.OrdinalIgnoreCase) &&
+                !description.Contains(_search, StringComparison.OrdinalIgnoreCase) &&
+                !compendiumType.Plural.Contains(_search, StringComparison.OrdinalIgnoreCase) &&
+                !compendiumType.Description.Contains(_search, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
@@ -97,10 +103,10 @@ public class CompendiumTypesWindow : GenericWindow
 
                         using (var group = ImRaii.Group())
                         {
-                            ImGui.TextUnformatted(compendiumType.Plural);
+                            ImGui.TextUnformatted(name);
                             using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
                             {
-                                ImGui.TextWrapped(compendiumType.Description);
+                                ImGui.TextWrapped(description);
                             }
                         }
                     }

@@ -126,13 +126,15 @@ namespace InventoryTools
             builder.RegisterSingletonsSelfAndInterfaces<BaseTooltip>(dataAccess);
             builder.RegisterSingletonsSelfAndInterfaces<IAtkOverlay>(cclAssembly);
             builder.RegisterSingletonsSelfAndInterfaces<IGameOverlay>(dataAccess);
-            builder.RegisterSingletonsSelfAndInterfaces<IColumn>(dataAccess);
+            builder.RegisterSingletonsSelfAndInterfaces<IColumn>(dataAccess)
+                .PropertiesAutowired((property, _) => property.PropertyType == typeof(UiText));
             builder.RegisterSingletonsSelfAndInterfaces<ISetting>(dataAccess).AsImplementedInterfaces();
             builder.RegisterSingletonsSelfAndInterfaces<IConfigLayout>(dataAccess);
             builder.RegisterSingletonsSelfAndInterfaces<IContentLayout>(dataAccess);
             builder.RegisterSingletonsSelfAndInterfaces<ISampleFilter>(dataAccess);
             builder.RegisterSingletonsSelfAndInterfaces<IFeature>(dataAccess);
-            builder.RegisterSingletonsSelfAndInterfaces<IItemInfoRenderer>(dataAccess);
+            builder.RegisterSingletonsSelfAndInterfaces<IItemInfoRenderer>(dataAccess)
+                .PropertiesAutowired((property, _) => property.PropertyType == typeof(UiText));
             builder.RegisterSingletonsSelfAndInterfaces<IGameCraftSource>(dataAccess);
             builder.RegisterSingletonsSelfAndInterfaces<IDebugPane>(typeof(ShopMonitorDebugPane).Assembly); //Register AllaganLib.Monitor debug panes
             builder.RegisterSingletonsSelfAndInterfaces<IDebugPane>(dataAccess); //Register InventoryTools debug panes
@@ -240,6 +242,7 @@ namespace InventoryTools
             builder.RegisterSingletonSelfAndInterfaces<InventoryScopeCalculator>();
             builder.RegisterSingletonSelfAndInterfaces<ItemInfoRenderService>();
             builder.RegisterSingletonSelfAndInterfaces<ItemLocalizer>();
+            builder.RegisterSingletonSelfAndInterfaces<UiText>();
             builder.RegisterSingletonSelfAndInterfaces<ListImportExportService>();
             builder.RegisterSingletonSelfAndInterfaces<Logger>();
             builder.RegisterSingletonSelfAndInterfaces<MarketBoardService>();

@@ -64,7 +64,7 @@ public class ConfigurationWizard : GenericWindow
 
     public override void Initialize()
     {
-        WindowName = "Configuration Wizard";
+        WindowName = ImGuiService.Text.Label("Configuration Wizard");
         Key = "wizard";
         _availableFeatures = _configurationWizardService.GetNewFeatures()
             .OrderBy(c => FeatureOrder.IndexOf(c.Content.Key) == -1
@@ -173,11 +173,11 @@ public class ConfigurationWizard : GenericWindow
 
     private void DrawPageHeader(string title)
     {
-        ImGui.TextUnformatted(title);
+        ImGui.TextUnformatted(ImGuiService.Text.Get(title));
         ImGui.SameLine();
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
         {
-            var label = $"step {_currentFeature} of {StepCount}";
+            var label = ImGuiService.Text.Format("step {0} of {1}", _currentFeature, StepCount);
             ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - ImGui.CalcTextSize(label).X);
             ImGui.TextUnformatted(label);
         }
@@ -191,7 +191,7 @@ public class ConfigurationWizard : GenericWindow
         ImGui.Spacing();
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
         {
-            ImGui.TextUnformatted(label);
+            ImGui.TextUnformatted(ImGuiService.Text.Get(label));
         }
 
         ImGui.Separator();
@@ -204,7 +204,7 @@ public class ConfigurationWizard : GenericWindow
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen, isCurrent))
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey3, !isCurrent && !isVisited))
         {
-            if (ImGui.Selectable(label, isCurrent)) GoToStep(step);
+            if (ImGui.Selectable(ImGuiService.Text.Label(label), isCurrent)) GoToStep(step);
         }
     }
 
@@ -273,16 +273,16 @@ public class ConfigurationWizard : GenericWindow
     {
         if (_configurationWizardService.ConfiguredOnce)
         {
-            ImGui.TextWrapped("Welcome back to the Allagan Tools configuration wizard.");
+            ImGui.TextWrapped(ImGuiService.Text.Get("Welcome back to the Allagan Tools configuration wizard."));
             ImGui.Separator();
             ImGui.TextWrapped(
-                "There are new features available to configure and you elected to show this window when that occurs.");
+                ImGuiService.Text.Get("There are new features available to configure and you elected to show this window when that occurs."));
             ImGui.NewLine();
 
             if (!_showIntro && _introPages.Count != 0)
             {
-                ImGui.TextWrapped("You can also go back through the introduction covering what the plugin does.");
-                if (ImGui.Button("Show me around again"))
+                ImGui.TextWrapped(ImGuiService.Text.Get("You can also go back through the introduction covering what the plugin does."));
+                if (ImGui.Button(ImGuiService.Text.Label("Show me around again")))
                 {
                     _showIntro = true;
                     NextStep();
@@ -292,14 +292,14 @@ public class ConfigurationWizard : GenericWindow
             return;
         }
 
-        ImGui.TextWrapped("Welcome to the Allagan Tools configuration wizard.");
+        ImGui.TextWrapped(ImGuiService.Text.Get("Welcome to the Allagan Tools configuration wizard."));
         ImGui.Separator();
         ImGui.TextWrapped(
-            "This will guide you through what the plugin does and then help you set up the most commonly used features. It takes a couple of minutes, and everything here can be changed later in the settings window.");
+            ImGuiService.Text.Get("This will guide you through what the plugin does and then help you set up the most commonly used features. It takes a couple of minutes, and everything here can be changed later in the settings window."));
         ImGui.NewLine();
-        ImGui.TextWrapped("If you are a returning user, feel free to close this window.");
+        ImGui.TextWrapped(ImGuiService.Text.Get("If you are a returning user, feel free to close this window."));
         ImGui.NewLine();
-        if (ImGui.Button("Open Help")) MediatorService.Publish(new ToggleGenericWindowMessage(typeof(HelpWindow)));
+        if (ImGui.Button(ImGuiService.Text.Label("Open Help"))) MediatorService.Publish(new ToggleGenericWindowMessage(typeof(HelpWindow)));
     }
 
     private void DrawStep()
@@ -328,7 +328,7 @@ public class ConfigurationWizard : GenericWindow
         if (isWelcome || isLast)
         {
             var showOnNewFeatures = _configuration.ShowWizardNewFeatures;
-            if (ImGui.Checkbox("Show this wizard when new features are released", ref showOnNewFeatures))
+            if (ImGui.Checkbox(ImGuiService.Text.Label("Show this wizard when new features are released"), ref showOnNewFeatures))
             {
                 _configuration.ShowWizardNewFeatures = showOnNewFeatures;
             }
@@ -368,7 +368,7 @@ public class ConfigurationWizard : GenericWindow
     private void DrawRightAligned(List<(string Label, Action OnClick, bool Enabled)> buttons)
     {
         var style = ImGui.GetStyle();
-        var total = buttons.Sum(c => ImGui.CalcTextSize(c.Label).X + (style.FramePadding.X * 2))
+        var total = buttons.Sum(c => ImGui.CalcTextSize(ImGuiService.Text.Get(c.Label)).X + (style.FramePadding.X * 2))
                     + (style.ItemSpacing.X * (buttons.Count - 1));
 
         ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - total);
@@ -383,7 +383,7 @@ public class ConfigurationWizard : GenericWindow
             var button = buttons[index];
             using (ImRaii.Disabled(!button.Enabled))
             {
-                if (ImGui.Button(button.Label))
+                if (ImGui.Button(ImGuiService.Text.Label(button.Label)))
                 {
                     button.OnClick();
                 }

@@ -45,7 +45,7 @@ namespace InventoryTools.Ui.Pages
         {
             if (!_popupMenus.ContainsKey(configuration))
             {
-                _popupMenus[configuration] = new PopupMenu("fm" + configuration.Key, PopupMenu.PopupMenuButtons.LeftRight,
+                _popupMenus[configuration] = new PopupMenu(ImGuiService.Text, "fm" + configuration.Key, PopupMenu.PopupMenuButtons.LeftRight,
                     new List<PopupMenu.IPopupMenuItem>()
                     {
                         new PopupMenu.PopupMenuItemSelectableAskName("Duplicate", "df_" + configuration.Key, configuration.Name, DuplicateList, "Duplicate the list."),
@@ -137,7 +137,7 @@ namespace InventoryTools.Ui.Pages
                         _draggedItemKey = key;
                         _draggedSection = payloadId;
                         ImGui.SetDragDropPayload(payloadId, []);
-                        ImGui.TextUnformatted("Moving: " + (config.Name != "" ? config.Name : "Untitled"));
+                        ImGui.TextUnformatted(ImGuiService.Text.Get("Moving: ") + (config.Name != "" ? config.Name : "Untitled"));
                     }
                 }
 
@@ -211,7 +211,7 @@ namespace InventoryTools.Ui.Pages
 
             if (ImGui.CollapsingHeader("Item Lists", ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.CollapsingHeader))
             {
-                if (ImGui.Button("Import from Clipboard##itemlist"))
+                if (ImGui.Button(ImGuiService.Text.Label("Import from Clipboard##itemlist")))
                 {
                     ImportFromClipboard(false);
                 }
@@ -229,7 +229,7 @@ namespace InventoryTools.Ui.Pages
 
                 if (itemLists.Count == 0)
                 {
-                    ImGui.TextUnformatted("No item lists created yet!");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("No item lists created yet!"));
                 }
                 else
                 {
@@ -244,7 +244,7 @@ namespace InventoryTools.Ui.Pages
 
             if (ImGui.CollapsingHeader("Craft Lists", ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.CollapsingHeader))
             {
-                if (ImGui.Button("Import from Clipboard##craftlist"))
+                if (ImGui.Button(ImGuiService.Text.Label("Import from Clipboard##craftlist")))
                 {
                     ImportFromClipboard(true);
                 }
@@ -262,7 +262,7 @@ namespace InventoryTools.Ui.Pages
 
                 if (craftLists.Count == 0)
                 {
-                    ImGui.TextUnformatted("No craft lists created yet!");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("No craft lists created yet!"));
                 }
                 else
                 {

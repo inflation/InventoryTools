@@ -459,7 +459,7 @@ public class CompendiumViewBuilder
                     {
                         _draggedSectionKey = key;
                         ImGui.SetDragDropPayload("##SectionReorder"u8, []);
-                        ImGui.TextUnformatted("Moving: " + section.SectionOptions.SectionName);
+                        ImGui.TextUnformatted(_imGuiService.Text.Get("Moving: ") + section.SectionOptions.SectionName);
                     }
                 }
 

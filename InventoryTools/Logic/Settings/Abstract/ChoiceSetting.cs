@@ -27,12 +27,12 @@ namespace InventoryTools.Logic.Settings.Abstract
             if (disableColouring != true && HasValueSet(configuration))
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.LabelText("##" + Key + "Label", customName ?? Name);
+                ImGui.LabelText("##" + Key + "Label", ImGuiService.Text.Get(customName ?? Name));
                 ImGui.PopStyleColor();
             }
             else
             {
-                ImGui.LabelText("##" + Key + "Label", customName ?? Name);
+                ImGui.LabelText("##" + Key + "Label", ImGuiService.Text.Get(customName ?? Name));
             }
 
             var choices = Choices;
@@ -40,7 +40,7 @@ namespace InventoryTools.Logic.Settings.Abstract
 
             var currentSearchCategory = GetFormattedChoice(activeChoice);
             ImGui.SetNextItemWidth(InputSize);
-            using (var combo = ImRaii.Combo("##" + Key + "Combo", currentSearchCategory))
+            using (var combo = ImRaii.Combo("##" + Key + "Combo", ImGuiService.Text.Get(currentSearchCategory ?? "")))
             {
                 if (combo.Success)
                 {
@@ -52,7 +52,7 @@ namespace InventoryTools.Logic.Settings.Abstract
                             continue;
                         }
 
-                        if (ImGui.Selectable(text, currentSearchCategory == text))
+                        if (ImGui.Selectable(ImGuiService.Text.Label(text), currentSearchCategory == text))
                         {
                             UpdateFilterConfiguration(configuration, item.Key);
                         }
@@ -65,7 +65,7 @@ namespace InventoryTools.Logic.Settings.Abstract
             if (disableReset != true && HasValueSet(configuration))
             {
                 ImGui.SameLine();
-                if (ImGui.Button("Reset##" + Key + "Reset"))
+                if (ImGui.Button(ImGuiService.Text.Get("Reset") + "##" + Key + "Reset"))
                 {
                     Reset(configuration);
                 }

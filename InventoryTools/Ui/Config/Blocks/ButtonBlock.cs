@@ -20,7 +20,7 @@ public sealed class ButtonBlock : IConfigBlock
 
     public void Draw(ConfigDrawContext context)
     {
-        if (ImGui.Button(_label))
+        if (ImGui.Button(context.ImGuiService.Text.Label(_label)))
         {
             context.Messages.Enqueue(_message());
         }

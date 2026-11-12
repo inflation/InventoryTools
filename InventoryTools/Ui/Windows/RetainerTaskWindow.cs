@@ -65,16 +65,16 @@ namespace InventoryTools.Ui
         {
             if (RetainerTask == null)
             {
-                ImGui.TextUnformatted("Submarine Exploration Point with the ID " + _retainerTaskId + " could not be found.");
+                ImGui.TextUnformatted(ImGuiService.Text.Format("Retainer venture with the ID {0} could not be found.", _retainerTaskId));
             }
             else
             {
                 ImGui.TextUnformatted(RetainerTask.FormattedName);
-                ImGui.TextUnformatted("Level: " + RetainerTask.Base.RetainerLevel);
-                ImGui.TextUnformatted("Duration: " + RetainerTask.DurationString);
-                ImGui.TextUnformatted("Experience: " + RetainerTask.ExperienceString);
-                ImGui.TextUnformatted("Venture Cost: " + RetainerTask.Base.VentureCost);
-                ImGui.TextUnformatted("Average iLvl: " + RetainerTask.Base.RequiredItemLevel);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Level: ") + RetainerTask.Base.RetainerLevel);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Duration: ") + RetainerTask.DurationString);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Experience: ") + RetainerTask.ExperienceString);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Venture Cost: ") + RetainerTask.Base.VentureCost);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Average iLvl: ") + RetainerTask.Base.RequiredItemLevel);
                 ;
                 ImGui.Image(ImGuiService.GetIconTexture(65049).Handle, new Vector2(100, 100) * ImGui.GetIO().FontGlobalScale);
 
@@ -126,7 +126,7 @@ namespace InventoryTools.Ui
                 #if DEBUG
                 if (ImGui.CollapsingHeader("Debug"))
                 {
-                    ImGui.TextUnformatted("Duty ID: " + _retainerTaskId);
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Duty ID: ") + _retainerTaskId);
                     Utils.PrintOutObject(RetainerTask, 0, new List<string>());
                 }
                 #endif

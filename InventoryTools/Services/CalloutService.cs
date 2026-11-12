@@ -2,6 +2,7 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using InventoryTools.Logic;
+using InventoryTools.Localizers;
 using InventoryTools.Services.Interfaces;
 
 namespace InventoryTools.Services;
@@ -10,9 +11,12 @@ public class CalloutService : ICalloutService
 {
     private readonly InventoryToolsConfiguration _configuration;
 
-    public CalloutService(InventoryToolsConfiguration configuration)
+    private readonly UiText _text;
+
+    public CalloutService(InventoryToolsConfiguration configuration, UiText text)
     {
         _configuration = configuration;
+        _text = text;
     }
 
     public bool HasSeen(NotificationPopup popup) => _configuration.HasSeenNotification(popup);
@@ -45,14 +49,14 @@ public class CalloutService : ICalloutService
         {
             if (modal)
             {
-                ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f), title);
+                ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f), _text.Get(title));
                 ImGui.Separator();
                 ImGui.Spacing();
                 ImGui.PushTextWrapPos(ImGui.GetCursorPosX() + wrapWidth);
-                ImGui.TextUnformatted(body);
+                ImGui.TextUnformatted(_text.Get(body));
                 ImGui.PopTextWrapPos();
                 ImGui.Spacing();
-                if (ImGui.Button("Got it"))
+                if (ImGui.Button(_text.Label("Got it")))
                 {
                     MarkSeen(popup);
                     ImGui.CloseCurrentPopup();

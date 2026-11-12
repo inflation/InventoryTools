@@ -55,7 +55,7 @@ public class ItemCraftLeveUseRenderer : ItemInfoRenderer<ItemCraftLeveUse>
         ImGui.TextUnformatted("Allowance Cost: " + leveRow.AllowanceCost);
         ImGui.Separator();
 
-        ImGui.TextUnformatted("Required Items: ");
+        ImGui.TextUnformatted(Text.Get("Required Items: "));
         using (ImRaii.PushIndent())
         {
             for (var index = 0; index < asSource.CraftLeve.Value.Item.Count; index++)
@@ -77,7 +77,7 @@ public class ItemCraftLeveUseRenderer : ItemInfoRenderer<ItemCraftLeveUse>
             }
         }
 
-        ImGui.TextUnformatted("Reward Items: ");
+        ImGui.TextUnformatted(Text.Get("Reward Items: "));
         using (ImRaii.PushIndent())
         {
             for (var itemGroupIndex = 0; itemGroupIndex < asSource.Leve.Value.LeveRewardItem.Value.LeveRewardItemGroup.Count; itemGroupIndex++)

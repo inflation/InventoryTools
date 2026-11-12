@@ -26,7 +26,7 @@ namespace InventoryTools.Ui
 
         public override void Initialize()
         {
-            WindowName = "Generate Support Dump";
+            WindowName = ImGuiService.Text.Label("Generate Support Dump");
             Key = "supportdump";
         }
 
@@ -42,11 +42,11 @@ namespace InventoryTools.Ui
         {
             ImGui.PushTextWrapPos();
             ImGui.TextWrapped(
-                "Only press this if you have been instructed to, it will generate a zip file containing your inventory, the allagan tools configuration, and your logs. If you are attempting to provide this information to help fix a bug, turn on Verbose Logging in File, replicate the bug and then generate this dump. Proceed?");
+                ImGuiService.Text.Get("Only press this if you have been instructed to, it will generate a zip file containing your inventory, the allagan tools configuration, and your logs. If you are attempting to provide this information to help fix a bug, turn on Verbose Logging in File, replicate the bug and then generate this dump. Proceed?"));
             ImGui.PopTextWrapPos();
             ImGui.NewLine();
 
-            if (ImGui.Button("Proceed"))
+            if (ImGui.Button(ImGuiService.Text.Label("Proceed")))
             {
                 _fileDialogManager.SaveFileDialog("Save support dump", "*.zip", "support_dump.zip", ".zip",
                     (success, path) =>
@@ -60,7 +60,7 @@ namespace InventoryTools.Ui
 
             ImGui.SameLine();
 
-            if (ImGui.Button("Cancel"))
+            if (ImGui.Button(ImGuiService.Text.Label("Cancel")))
             {
                 this.IsOpen = false;
             }

@@ -28,7 +28,7 @@ public abstract class GenericColorSetting : Setting<Vector4?>
     {
         var value = CurrentValue(configuration);
 
-        ImGui.LabelText("##" + Key + "Label", customName ?? Name);
+        ImGui.LabelText("##" + Key + "Label", ImGuiService.Text.Get(customName ?? Name));
 
         var enabled = value != null;
 
@@ -60,7 +60,7 @@ public abstract class GenericColorSetting : Setting<Vector4?>
         if (disableReset != true && HasValueSet(configuration))
         {
             ImGui.SameLine();
-            if (ImGui.Button("Reset##" + Key + "Reset"))
+            if (ImGui.Button(ImGuiService.Text.Get("Reset") + "##" + Key + "Reset"))
             {
                 Reset(configuration);
             }

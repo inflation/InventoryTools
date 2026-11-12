@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Dalamud.NET.Sdk/15.0.0">
   <PropertyGroup>
-    <AssemblyName>InventoryTools</AssemblyName>
+    <AssemblyName>InventoryToolsCN</AssemblyName>
     <NoWarn>IDE0003</NoWarn>
     <NoWarn>S3267</NoWarn>
     <OutputType>Library</OutputType>
@@ -175,6 +175,7 @@
   <ItemGroup>
     <Folder Include="Logic\Columns\Tools\" />
     <Folder Include="SelfTests\" />
+    <EmbeddedResource Include="Localizers\zh-CN.json" LogicalName="InventoryTools.Localizers.zh-CN.json" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="BannedSymbols.txt" />

@@ -40,7 +40,7 @@ namespace InventoryTools.Ui
             else
             {
                 Key = "aepid_unknown";
-                WindowName = "Unknown Airship Point";
+                WindowName = ImGuiService.Text.Label("Unknown Airship Point");
                 _drops = new List<ItemRow>();
             }
         }
@@ -58,13 +58,13 @@ namespace InventoryTools.Ui
         {
             if (AirshipExplorationPoint == null)
             {
-                ImGui.TextUnformatted("Airship Exploration Point with the ID " + _airshipExplorationPointId + " could not be found.");
+                ImGui.TextUnformatted(ImGuiService.Text.Format("Airship Exploration Point with the ID {0} could not be found.", _airshipExplorationPointId));
             }
             else
             {
                 ImGui.TextUnformatted(AirshipExplorationPoint.Base.NameShort.ExtractText());
-                ImGui.TextUnformatted("Unlocked Via: " + AirshipExplorationPoint.Unlock?.Base.NameShort.ExtractText() ?? "N/A");
-                ImGui.TextUnformatted("Rank Required: " + AirshipExplorationPoint.Base.RankReq);
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Unlocked Via: ") + AirshipExplorationPoint.Unlock?.Base.NameShort.ExtractText() ?? "N/A");
+                ImGui.TextUnformatted(ImGuiService.Text.Get("Rank Required: ") + AirshipExplorationPoint.Base.RankReq);
                 ;
                 var itemIcon = ImGuiService.GetIconTexture(Icons.AirshipIcon);
                 ImGui.Image(itemIcon.Handle, new Vector2(100, 100) * ImGui.GetIO().FontGlobalScale);
@@ -114,7 +114,7 @@ namespace InventoryTools.Ui
                 #if DEBUG
                 if (ImGui.CollapsingHeader("Debug"))
                 {
-                    ImGui.TextUnformatted("Duty ID: " + _airshipExplorationPointId);
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Duty ID: ") + _airshipExplorationPointId);
                     Utils.PrintOutObject(AirshipExplorationPoint, 0, new List<string>());
                 }
                 #endif

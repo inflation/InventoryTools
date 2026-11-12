@@ -23,7 +23,7 @@ public sealed class BulletBlock : IConfigBlock
         {
             ImGui.Bullet();
             ImGui.SameLine();
-            ImGui.TextWrapped(_text);
+            ImGui.TextWrapped(context.ImGuiService.Text.Get(_text));
         }
     }
 }

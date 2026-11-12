@@ -1,0 +1,72 @@
+name: Publish CN release
+
+on:
+  push:
+    tags:
+      - 'cn-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: windows-2022
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      CN_DALAMUD_RELEASE: '26-11-10-01'
+      CN_DALAMUD_SHA256: 97a049f61d98d3f54d022bc5c16e915d694e152be2b1194dccd22a1457a5d0bd
+      RELEASE_TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install the DalamudCN SDK
+        shell: pwsh
+        run: |
+          $sdk = Join-Path $env:RUNNER_TEMP 'dalamud-cn'
+          $archive = Join-Path $env:RUNNER_TEMP 'dalamud-cn.7z'
+          Invoke-WebRequest "https://github.com/Dalamud-DailyRoutines/Dalamud/releases/download/$env:CN_DALAMUD_RELEASE/latest.7z" -OutFile $archive
+          if ((Get-FileHash $archive).Hash -ne $env:CN_DALAMUD_SHA256) {
+            throw 'The DalamudCN SDK archive checksum does not match the pinned release.'
+          }
+          7z x $archive "-o$sdk" -y
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path (Join-Path $sdk 'Dalamud.dll'))) {
+            throw 'The DalamudCN SDK could not be extracted.'
+          }
+          "DALAMUD_HOME=$sdk" >> $env:GITHUB_ENV
+      - name: Build and check the release package
+        shell: pwsh
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^cn-v([0-9]+(?:\.[0-9]+){3})$') {
+            throw 'Use a four-component tag such as cn-v1.15.1.1.'
+          }
+          $version = $Matches[1]
+          dotnet build InventoryTools/InventoryTools.csproj -c Release "-p:Version=$version"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $package = Resolve-Path 'InventoryTools/bin/Release/InventoryToolsCN/latest.zip'
+          $zip = [IO.Compression.ZipFile]::OpenRead($package.Path)
+          try {
+            $reader = [IO.StreamReader]::new($zip.GetEntry('InventoryToolsCN.json').Open())
+            try { $manifest = $reader.ReadToEnd() | ConvertFrom-Json }
+            finally { $reader.Dispose() }
+            if ($manifest.InternalName -ne 'InventoryToolsCN' -or
+                $manifest.AssemblyVersion -ne $version -or
+                $manifest.DalamudApiLevel -ne 15 -or
+                !$zip.GetEntry('InventoryToolsCN.dll')) {
+              throw 'The package does not match the release tag.'
+            }
+          } finally { $zip.Dispose() }
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content 'InventoryToolsCN.json'
+      - name: Publish release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assets = @('InventoryTools/bin/Release/InventoryToolsCN/latest.zip', 'InventoryToolsCN.json')
+          gh release create $env:RELEASE_TAG --verify-tag --generate-notes @assets
+          exit $LASTEXITCODE

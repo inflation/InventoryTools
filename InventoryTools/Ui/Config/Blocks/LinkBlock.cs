@@ -20,7 +20,7 @@ public sealed class LinkBlock : IConfigBlock
 
     public void Draw(ConfigDrawContext context)
     {
-        if (ImGui.Button(_label))
+        if (ImGui.Button(context.ImGuiService.Text.Label(_label)))
         {
             _url.OpenBrowser();
         }

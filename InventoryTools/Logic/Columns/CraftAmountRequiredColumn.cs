@@ -153,7 +153,7 @@ namespace InventoryTools.Logic.Columns
             if (itemHovered || ImGui.IsItemHovered(ImGuiHoveredFlags.None))
             {
                 using var tt = ImRaii.Tooltip();
-                ImGui.Text("Ingredient Breakdown:");
+                ImGui.Text(ImGuiService.Text.Get("Ingredient Breakdown:"));
                 ImGui.TextUnformatted("Amount Originally Required: " + searchResult.CraftItem.QuantityRequired);
                 ImGui.TextUnformatted("Amount Required: " + searchResult.CraftItem.QuantityNeededPreUpdate);
                 ImGui.TextUnformatted("Amount in Inventory: " + searchResult.CraftItem.QuantityReady);
@@ -176,7 +176,7 @@ namespace InventoryTools.Logic.Columns
                 if (searchResult.CraftItem.Recipe != null)
                 {
                     ImGui.Separator();
-                    ImGui.TextUnformatted("Ingredients: ");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Ingredients: "));
                     using (ImRaii.PushIndent())
                     {
                         foreach (var ingredient in searchResult.CraftItem.Recipe.IngredientCounts)

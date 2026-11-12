@@ -47,7 +47,7 @@ public class ItemCustomDeliverySourceRenderer : ItemInfoRenderer<ItemCustomDeliv
         }
         else
         {
-            ImGui.Text("Unknown Npc");
+            ImGui.Text(Text.Get("Unknown Npc"));
         }
     };
 

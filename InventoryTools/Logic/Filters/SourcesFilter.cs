@@ -48,7 +48,7 @@ namespace InventoryTools.Logic.Filters
             ImGui.NewLine();
             ImGui.Separator();
             ImGui.NewLine();
-            ImGui.Text("Source Information: ");
+            ImGui.Text(ImGuiService.Text.Get("Source Information: "));
             ImGui.SameLine();
             ImGuiService.HelpMarker(GetHelpText(configuration));
             var allCharacters = _characterMonitor.Characters;

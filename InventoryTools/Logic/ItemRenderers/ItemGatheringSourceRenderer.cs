@@ -248,7 +248,7 @@ public abstract class ItemGatheringSourceRenderer<T> : ItemInfoRenderer<T> where
 
          if (asSource.GatheringItem.AvailableAtTimedNode)
          {
-             ImGui.Text("Maps:");
+             ImGui.Text(Text.Get("Maps:"));
              using (ImRaii.PushIndent())
              {
                  foreach (var gatheringPoint in asSource.GatheringItem.GatheringPoints)

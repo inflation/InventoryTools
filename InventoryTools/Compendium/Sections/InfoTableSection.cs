@@ -30,13 +30,13 @@ public class InfoTableSection : ViewSection
             {
                 foreach (var item in _options.Items.Where(c => c.IsVisible))
                 {
-                    ImGui.TableSetupColumn(item.Header, ImGuiTableColumnFlags.WidthStretch);
+                    ImGui.TableSetupColumn(Text.Label(item.Header), ImGuiTableColumnFlags.WidthStretch);
                 }
 
                 foreach (var item in _options.Items.Where(c => c.IsVisible))
                 {
                     ImGui.TableNextColumn();
-                    Utils.CenterWrappedText(item.Header);
+                    Utils.CenterWrappedText(Text.Get(item.Header));
                 }
 
                 ImGui.TableNextRow();

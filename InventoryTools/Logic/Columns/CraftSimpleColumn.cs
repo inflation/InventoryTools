@@ -63,7 +63,7 @@ namespace InventoryTools.Logic.Columns
                     configuration.CraftList.RemoveCraftItem(searchResult.CraftItem.ItemId);
                     configuration.NeedsRefresh = true;
                 }
-                OtterGui.ImGuiUtil.HoverTooltip("Delete item");
+                OtterGui.ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Delete item"));
 
             }
 
@@ -88,14 +88,14 @@ namespace InventoryTools.Logic.Columns
                                 ImGui.SameLine();
                                 ImGui.Image(ImGuiService.GetIconTexture(Icons.QuestionMarkIcon).Handle, new Vector2(16, 16));
                                 OtterGui.ImGuiUtil.HoverTooltip(
-                                    "The market price of this item is cheaper than buying it from a vendor and you prefer vendors over the current ingredient preference.");
+                                    ImGuiService.Text.Get("The market price of this item is cheaper than buying it from a vendor and you prefer vendors over the current ingredient preference."));
                             }
                         }
                     }
                 }
                 else
                 {
-                    ImGui.Text("N/A");
+                    ImGui.Text(ImGuiService.Text.Get("N/A"));
                 }
 
                 var craftPrices = searchResult.CraftItem.CraftPrices;
@@ -141,7 +141,7 @@ namespace InventoryTools.Logic.Columns
                 if (ImGui.IsItemHovered(ImGuiHoveredFlags.None))
                 {
                     using var tt = ImRaii.Tooltip();
-                    ImGui.Text("Missing Ingredients: ");
+                    ImGui.Text(ImGuiService.Text.Get("Missing Ingredients: "));
                     foreach (var missingIngredient in searchResult.CraftItem.MissingIngredients)
                     {
                         var itemId = missingIngredient.Key.Item1;

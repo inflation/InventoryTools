@@ -50,7 +50,7 @@ public class HelpWindow : GenericWindow
 
     public override void Initialize()
     {
-        WindowName = "Help";
+        WindowName = ImGuiService.Text.Label("Help");
         Key = "help";
     }
 
@@ -78,7 +78,7 @@ public class HelpWindow : GenericWindow
                 for (var index = 0; index < _pages.Count; index++)
                 {
                     var page = _pages[index];
-                    if (ImGui.Selectable($"{index + 1}. {page.Name}", page == selected))
+                    if (ImGui.Selectable($"{index + 1}. {ImGuiService.Text.Get(page.Name)}##{page.Key}", page == selected))
                         _configuration.SelectedHelpPageKey = page.Key;
                 }
             }

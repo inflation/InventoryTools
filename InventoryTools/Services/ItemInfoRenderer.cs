@@ -262,7 +262,7 @@ public class ItemInfoRenderService : IDisposable
     {
         if (_sourceRenderersByItemInfoType.TryGetValue(type, out var renderer))
         {
-            return (renderer.SingularName, renderer.PluralName);
+            return LocalizeTypeName(renderer);
         }
 
         return (type.ToString(), null);
@@ -272,17 +272,17 @@ public class ItemInfoRenderService : IDisposable
     {
         if (_sourceRenderersByItemInfoType.TryGetValue(type, out var renderer))
         {
-            return renderer.HelpText;
+            return _imGuiService.Text.Get(renderer.HelpText);
         }
 
         return "Can this item be sourced via " + type.ToString();
     }
 
-    public (string Singular, string? Plural) GetSourceTypeName(Type type)
+    public (string Singular, string? Plural) GetSourceTypeName(Type type, bool localized = true)
     {
         if (_sourceRenderers.TryGetValue(type, out var renderer))
         {
-            return (renderer.SingularName, renderer.PluralName);
+            return localized ? LocalizeTypeName(renderer) : (renderer.SingularName, renderer.PluralName);
         }
 
         return (type.ToString(), null);
@@ -292,7 +292,7 @@ public class ItemInfoRenderService : IDisposable
     {
         if (_useRenderersByItemInfoType.TryGetValue(type, out var renderer))
         {
-            return (renderer.SingularName, renderer.PluralName);
+            return LocalizeTypeName(renderer);
         }
 
         return (type.ToString(), null);
@@ -302,21 +302,27 @@ public class ItemInfoRenderService : IDisposable
     {
         if (_useRenderersByItemInfoType.TryGetValue(type, out var renderer))
         {
-            return renderer.HelpText;
+            return _imGuiService.Text.Get(renderer.HelpText);
         }
 
         return "Can this item be used for " + type.ToString();
     }
 
 
-    public (string Singular, string? Plural) GetUseTypeName(Type type)
+    public (string Singular, string? Plural) GetUseTypeName(Type type, bool localized = true)
     {
         if (_useRenderers.TryGetValue(type, out var renderer))
         {
-            return (renderer.SingularName, renderer.PluralName);
+            return localized ? LocalizeTypeName(renderer) : (renderer.SingularName, renderer.PluralName);
         }
 
         return (type.ToString(), null);
+    }
+
+    private (string Singular, string? Plural) LocalizeTypeName(IItemInfoRenderer renderer)
+    {
+        var text = _imGuiService.Text;
+        return (text.Get(renderer.SingularName), renderer.PluralName is { } plural ? text.Get(plural) : null);
     }
 
     public List<List<ItemSource>> GetGroupedSources(List<ItemSource> allItemSources)

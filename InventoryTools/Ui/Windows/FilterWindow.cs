@@ -62,10 +62,10 @@ namespace InventoryTools.Ui
             else
             {
                 Key = "filter_invalid";
-                WindowName = "Invalid List";
+                WindowName = ImGuiService.Text.Label("Invalid List");
             }
 
-            _settingsMenu = new PopupMenu("configMenu", PopupMenu.PopupMenuButtons.All,
+            _settingsMenu = new PopupMenu(ImGuiService.Text, "configMenu", PopupMenu.PopupMenuButtons.All,
                 new List<PopupMenu.IPopupMenuItem>()
                 {
                     new PopupMenu.PopupMenuItemSelectable("Mobs", "mobs", _ => MediatorService.Publish(new InventoryTools.Mediator.OpenCompendiumListByTypeMessage(typeof(InventoryTools.Compendium.Types.BNpcCompendiumType))),
@@ -183,7 +183,7 @@ namespace InventoryTools.Ui
                 {
                     var highlightItems = itemTable.HighlightItems;
                     ImGuiService.CenterElement(20 * ImGui.GetIO().FontGlobalScale);
-                    ImGui.Checkbox("Highlight?" + "###" + itemTable.Key + "VisibilityCheckbox",
+                    ImGui.Checkbox(ImGuiService.Text.Label("Highlight?###" + itemTable.Key + "VisibilityCheckbox"),
                         ref highlightItems);
                     if (highlightItems != itemTable.HighlightItems)
                     {
@@ -201,7 +201,7 @@ namespace InventoryTools.Ui
                         itemTable.ClearFilters();
                     }
 
-                    ImGuiUtil.HoverTooltip("Clear the current search.");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Clear the current search."));
 
                 }
             }
@@ -244,7 +244,7 @@ namespace InventoryTools.Ui
                         }
                     }
 
-                    ImGuiUtil.HoverTooltip("Refresh Market Prices");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Refresh Market Prices"));
                     ImGui.SameLine();
                     ImGuiService.CenterElement(24 * ImGui.GetIO().FontGlobalScale);
                     var csvCursorX = ImGui.GetCursorPosX();
@@ -254,7 +254,7 @@ namespace InventoryTools.Ui
                             (b, s) => { SaveCallback(itemTable, b, s); }, null, true);
                     }
 
-                    ImGuiUtil.HoverTooltip("Export to CSV");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Export to CSV"));
                     if (filterConfiguration.FilterType == FilterType.CraftFilter &&
                         _gameUiManager.IsWindowVisible(
                             CriticalCommonLib.Services.Ui.WindowName.SubmarinePartsMenu))
@@ -263,7 +263,7 @@ namespace InventoryTools.Ui
                         if (subMarinePartsMenu != null)
                         {
                             ImGui.SameLine();
-                            if (ImGui.Button("Add Company Craft to List"))
+                            if (ImGui.Button(ImGuiService.Text.Label("Add Company Craft to List")))
                             {
                                 var subAddon = (SubmarinePartsMenuAddon*)subMarinePartsMenu;
                                 for (byte i = 0; i < 6; i++)
@@ -291,9 +291,9 @@ namespace InventoryTools.Ui
                     if (filterConfiguration.FilterType == FilterType.CraftFilter)
                     {
                         ImGui.SameLine();
-                        ImGui.TextUnformatted("Total Cost NQ: " + filterConfiguration.CraftList.MinimumNQCost);
+                        ImGui.TextUnformatted(ImGuiService.Text.Get("Total Cost NQ: ") + filterConfiguration.CraftList.MinimumNQCost);
                         ImGui.SameLine();
-                        ImGui.TextUnformatted("Total Cost HQ: " + filterConfiguration.CraftList.MinimumHQCost);
+                        ImGui.TextUnformatted(ImGuiService.Text.Get("Total Cost HQ: ") + filterConfiguration.CraftList.MinimumHQCost);
                     }
 
                     if (filterConfiguration.FilterType == FilterType.CraftFilter)
@@ -322,7 +322,7 @@ namespace InventoryTools.Ui
                         MediatorService.Publish(new ToggleGenericWindowMessage(typeof(ConfigurationWindow)));
                     }
 
-                    ImGuiUtil.HoverTooltip("Open the configuration window.");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Open the configuration window."));
 
                     ImGui.SetCursorPosY(0);
                     width -= 30 * ImGui.GetIO().FontGlobalScale;
@@ -332,7 +332,7 @@ namespace InventoryTools.Ui
                         MediatorService.Publish(new ToggleGenericWindowMessage(typeof(FiltersWindow)));
                     }
 
-                    ImGuiUtil.HoverTooltip("Open the items window.");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Open the items window."));
 
                     ImGui.SetCursorPosY(0);
                     width -= 30 * ImGui.GetIO().FontGlobalScale;
@@ -342,7 +342,7 @@ namespace InventoryTools.Ui
                         MediatorService.Publish(new ToggleGenericWindowMessage(typeof(CraftsWindow)));
                     }
 
-                    ImGuiUtil.HoverTooltip("Open the craft window.");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Open the craft window."));
 
                     var totalItems =  itemTable.RenderSearchResults.Count + " items";
 

@@ -117,7 +117,7 @@ namespace InventoryTools.Logic.Columns
                 }
 
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + ImGui.GetStyle().CellPadding.Y);
-                var itemSources = columnConfiguration.FilterText != "" ? search.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : search;
+                var itemSources = columnConfiguration.FilterText != "" ? search.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : search;
                 messages.AddRange(_itemInfoRenderService.DrawItemSourceIconsContainer("ItemSources" + rowIndex, filterConfiguration.TableHeight * ImGui.GetIO().FontGlobalScale - ImGui.GetStyle().FramePadding.X, new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight), itemSources.ToList()));
             }
             return messages;
@@ -126,18 +126,18 @@ namespace InventoryTools.Logic.Columns
         public override void Setup(FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration,
             int columnIndex)
         {
-            ImGui.TableSetupColumn(RenderName ?? Name, ImGuiTableColumnFlags.WidthFixed, Width, (uint)columnIndex);
+            ImGui.TableSetupColumn(ImGuiService.Text.Get(RenderName ?? Name), ImGuiTableColumnFlags.WidthFixed, Width, (uint)columnIndex);
         }
 
         public override string CsvExport(ColumnConfiguration columnConfiguration, SearchResult searchResult)
         {
-            var itemSources = columnConfiguration.FilterText != "" ? searchResult.Item.Sources.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Sources;
+            var itemSources = columnConfiguration.FilterText != "" ? searchResult.Item.Sources.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Sources;
             return String.Join(", ", itemSources.Select(c => _itemInfoRenderService.GetSourceDescription(c)));
         }
 
         public override dynamic? JsonExport(ColumnConfiguration columnConfiguration, SearchResult searchResult)
         {
-            var itemSources = columnConfiguration.FilterText != "" ? searchResult.Item.Sources.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType()).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Sources;
+            var itemSources = columnConfiguration.FilterText != "" ? searchResult.Item.Sources.Where(c => (_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService.GetSourceTypeName(c.GetType(), localized: false).Singular.ToLower()).PassesFilterComparisonText(columnConfiguration.FilterComparisonText)) : searchResult.Item.Sources;
             return String.Join(", ", itemSources.Select(c => _itemInfoRenderService.GetSourceDescription(c)));
         }
 
@@ -169,7 +169,7 @@ namespace InventoryTools.Logic.Columns
                     if (columnConfiguration.FilterText != string.Empty)
                     {
                         if (!(_itemInfoRenderService.GetSourceName(c).ToLower() + " " + _itemInfoRenderService
-                                .GetSourceTypeName(c.GetType()).Singular.ToLower())
+                                .GetSourceTypeName(c.GetType(), localized: false).Singular.ToLower())
                             .PassesFilterComparisonText(columnConfiguration.FilterComparisonText))
                         {
                             return false;

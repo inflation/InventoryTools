@@ -32,6 +32,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog.Events;
 using ImGuiUtil = OtterGui.ImGuiUtil;
+using InventoryTools.Localizers;
 
 namespace InventoryTools.Ui
 {
@@ -56,6 +57,7 @@ namespace InventoryTools.Ui
         private readonly InventoryToolsConfiguration _configuration;
         private readonly VerticalSplitter _verticalSplitter;
         private readonly IFont _font;
+        private readonly UiText _text;
         private IEnumerable<IMenuWindow>? _menuWindows;
         private FilterConfiguration? _nextFilter;
 
@@ -77,13 +79,15 @@ namespace InventoryTools.Ui
             FilterConfiguration.Factory filterConfigurationFactory,
             IEnumerable<ISampleFilter> sampleFilters,
             IComponentContext context,
-            IFont font) : base(logger,
+            IFont font,
+            UiText text) : base(logger,
             mediator,
             imGuiService,
             configuration,
             "Configuration Window")
         {
             _pluginLog = pluginLog;
+            _text = text;
             _configurationWizardService = configurationWizardService;
             _chatUtilities = chatUtilities;
             _pluginLogic = pluginLogic;
@@ -105,7 +109,7 @@ namespace InventoryTools.Ui
 
         public override void Initialize()
         {
-            WindowName = "Configuration";
+            WindowName = ImGuiService.Text.Label("Configuration");
             Key = "configuration";
             #if DEBUG
             _settingCoverageService.Report();
@@ -130,7 +134,7 @@ namespace InventoryTools.Ui
             _configPages.Add(_configPageFactory.Invoke(typeof(ListsPage)));
             _configPages.Add(_configPageFactory.Invoke(typeof(CharacterRetainerPage)));
 
-            _addFilterMenu = new PopupMenu("addFilter", PopupMenu.PopupMenuButtons.LeftRight,
+            _addFilterMenu = new PopupMenu(ImGuiService.Text, "addFilter", PopupMenu.PopupMenuButtons.LeftRight,
                 new List<PopupMenu.IPopupMenuItem>()
                 {
                     new PopupMenu.PopupMenuItemSelectableAskName("Search List", "adf1", "New Search List", AddSearchFilter, "This will create a new list that let's you search for specific items within your characters and retainers inventories."),
@@ -139,7 +143,7 @@ namespace InventoryTools.Ui
                     new PopupMenu.PopupMenuItemSelectableAskName("History List", "af4", "New History Item List", AddHistoryFilter, "This will create a list that lets you view historical data of how your inventory has changed."),
                 });
 
-            _addSampleMenu = new PopupMenu("addSampleFilter", PopupMenu.PopupMenuButtons.LeftRight, []);
+            _addSampleMenu = new PopupMenu(ImGuiService.Text, "addSampleFilter", PopupMenu.PopupMenuButtons.LeftRight, []);
 
             var sampleId = 0;
             foreach (var sampleFilter in _sampleFilters)
@@ -172,7 +176,7 @@ namespace InventoryTools.Ui
                 }
             }
 
-            _settingsMenu = new PopupMenu("configMenu", PopupMenu.PopupMenuButtons.All,
+            _settingsMenu = new PopupMenu(ImGuiService.Text, "configMenu", PopupMenu.PopupMenuButtons.All,
                 new List<PopupMenu.IPopupMenuItem>()
                 {
                     new PopupMenu.PopupMenuItemSelectable("Items Window", "filters", OpenFiltersWindow,"Open the items window."),
@@ -188,7 +192,7 @@ namespace InventoryTools.Ui
                     new PopupMenu.PopupMenuItemSelectable("Help", "help", OpenHelpWindow,"Open the help window."),
                 });
 
-            _wizardMenu = new PopupMenu("wizardMenu", PopupMenu.PopupMenuButtons.All,
+            _wizardMenu = new PopupMenu(ImGuiService.Text, "wizardMenu", PopupMenu.PopupMenuButtons.All,
                 new List<PopupMenu.IPopupMenuItem>()
                 {
                     new PopupMenu.PopupMenuItemSelectable("Configure new settings", "configureNew", ConfigureNewSettings,"Configure new settings."),
@@ -295,7 +299,7 @@ namespace InventoryTools.Ui
         {
             if (!_popupMenus.ContainsKey(configuration))
             {
-                _popupMenus[configuration] = new PopupMenu("fm" + configuration.Key, PopupMenu.PopupMenuButtons.Right,
+                _popupMenus[configuration] = new PopupMenu(ImGuiService.Text, "fm" + configuration.Key, PopupMenu.PopupMenuButtons.Right,
                     new List<PopupMenu.IPopupMenuItem>()
                     {
                         new PopupMenu.PopupMenuItemSelectableAskName("Duplicate", "df_" + configuration.Key, configuration.Name, DuplicateFilter, "Duplicate the filter."),
@@ -508,26 +512,26 @@ namespace InventoryTools.Ui
             {
                 if (menuBar)
                 {
-                    using (var menu = ImRaii.Menu("File"))
+                    using (var menu = ImRaii.Menu(_text.Label("File")))
                     {
                         if (menu)
                         {
-                            if (ImGui.MenuItem("Report a Issue"))
+                            if (ImGui.MenuItem(_text.Label("Report a Issue")))
                             {
                                 "https://github.com/Critical-Impact/AllaganMarket".OpenBrowser();
                             }
 
-                            if (ImGui.MenuItem("Changelog"))
+                            if (ImGui.MenuItem(_text.Label("Changelog")))
                             {
                                 MediatorService.Publish(new OpenGenericWindowMessage(typeof(ChangelogWindow)));
                             }
 
-                            if (ImGui.MenuItem("Help"))
+                            if (ImGui.MenuItem(_text.Label("Help")))
                             {
                                 MediatorService.Publish(new OpenGenericWindowMessage(typeof(HelpWindow)));
                             }
 
-                            if (ImGui.MenuItem("Enable Verbose Logging", "",
+                            if (ImGui.MenuItem(_text.Label("Enable Verbose Logging"), "",
                                     this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose))
                             {
                                 if (this._pluginLog.MinimumLogLevel == LogEventLevel.Verbose)
@@ -540,7 +544,7 @@ namespace InventoryTools.Ui
                                 }
                             }
 
-                            if (ImGui.MenuItem("Generate Support Dump"))
+                            if (ImGui.MenuItem(_text.Label("Generate Support Dump")))
                             {
                                 this.MediatorService.Publish(new OpenGenericWindowMessage(typeof(SupportDumpWindow)));
                             }
@@ -550,27 +554,27 @@ namespace InventoryTools.Ui
                                 "https://ko-fi.com/critical_impact".OpenBrowser();
                             }
 
-                            if (ImGui.MenuItem("Close"))
+                            if (ImGui.MenuItem(_text.Label("Close")))
                             {
                                 this.IsOpen = false;
                             }
                         }
                     }
 
-                    using (var menu = ImRaii.Menu("Wizard"))
+                    using (var menu = ImRaii.Menu(_text.Label("Wizard")))
                     {
                         if (menu)
                         {
                             var hasNewFeatures = this._configurationWizardService.HasNewFeatures;
                             using var disabled = ImRaii.Disabled(!hasNewFeatures);
-                            if (ImGui.MenuItem("Configure New Features"))
+                            if (ImGui.MenuItem(_text.Label("Configure New Features")))
                             {
                                 MediatorService.Publish(new OpenGenericWindowMessage(typeof(ConfigurationWizard)));
                             }
 
                             disabled.Dispose();
 
-                            if (ImGui.MenuItem("Reconfigure All Features"))
+                            if (ImGui.MenuItem(_text.Label("Reconfigure All Features")))
                             {
                                 this._configurationWizardService.ClearFeaturesSeen();
                                 MediatorService.Publish(new OpenGenericWindowMessage(typeof(ConfigurationWizard)));
@@ -578,7 +582,7 @@ namespace InventoryTools.Ui
                         }
                     }
 
-                    using (var menu = ImRaii.Menu("Windows"))
+                    using (var menu = ImRaii.Menu(_text.Label("Windows")))
                     {
                         if (menu)
                         {
@@ -586,7 +590,7 @@ namespace InventoryTools.Ui
                             {
                                 foreach (var window in _menuWindows)
                                 {
-                                    if (ImGui.MenuItem(window.GenericName))
+                                    if (ImGui.MenuItem(_text.Label(window.GenericName)))
                                     {
                                         MediatorService.Publish(new OpenGenericWindowMessage(window.GetType()));
                                     }
@@ -613,7 +617,7 @@ namespace InventoryTools.Ui
             if (!string.IsNullOrWhiteSpace(_searchQuery))
             {
                 ImGui.SameLine();
-                if (ImGui.Button("Clear##configSearchClear"))
+                if (ImGui.Button(ImGuiService.Text.Label("Clear##configSearchClear")))
                 {
                     _searchQuery = string.Empty;
                 }
@@ -627,7 +631,7 @@ namespace InventoryTools.Ui
             var results = _configSearchService.Search(_searchQuery);
             if (results.Count == 0)
             {
-                ImGui.TextWrapped($"No settings match '{_searchQuery}'.");
+                ImGui.TextWrapped(ImGuiService.Text.Format("No settings match '{0}'.", _searchQuery));
                 return;
             }
 
@@ -692,7 +696,7 @@ namespace InventoryTools.Ui
                         {
                             var hasChildren = configPage.ChildPages != null;
                             var isSelected = ConfigSelectedConfigurationPageKey == configPage.Key;
-                            using (var node = ImRaii.TreeNode(configPage.Name, hasChildren ?  ImGuiTreeNodeFlags.None : isSelected ? ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.Leaf))
+                            using (var node = ImRaii.TreeNode(_text.Label(configPage.Name), hasChildren ?  ImGuiTreeNodeFlags.None : isSelected ? ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.Leaf))
                             {
                                 if (node)
                                 {
@@ -702,7 +706,7 @@ namespace InventoryTools.Ui
                                         {
                                             isSelected = ConfigSelectedConfigurationPageKey == childPage.Key;
 
-                                            using (var subNode = ImRaii.TreeNode(childPage.Name,
+                                            using (var subNode = ImRaii.TreeNode(_text.Label(childPage.Name),
                                                        isSelected
                                                            ? ImGuiTreeNodeFlags.Selected |
                                                              ImGuiTreeNodeFlags.Bullet
@@ -733,7 +737,7 @@ namespace InventoryTools.Ui
                     }
 
                     ImGui.NewLine();
-                    ImGui.TextUnformatted("Item Lists");
+                    ImGui.TextUnformatted(ImGuiService.Text.Get("Item Lists"));
                     ImGui.Separator();
 
                     foreach (var item in _filterPages)
@@ -780,7 +784,7 @@ namespace InventoryTools.Ui
                     }
 
                     _addFilterMenu.Draw();
-                    ImGuiUtil.HoverTooltip("Add a new list");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Add a new list"));
 
                     ImGui.SetCursorPosY(height - 24 * ImGui.GetIO().FontGlobalScale);
                     ImGui.SetCursorPosX(26 * ImGui.GetIO().FontGlobalScale);
@@ -791,7 +795,7 @@ namespace InventoryTools.Ui
                     }
 
                     _addSampleMenu.Draw();
-                    ImGuiUtil.HoverTooltip("Add a sample filter");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Add a sample filter"));
 
                     var width = ImGui.GetCursorPosX();
                     width -= 24 * ImGui.GetIO().FontGlobalScale;
@@ -815,7 +819,7 @@ namespace InventoryTools.Ui
                     _wizardMenu.Draw();
 
 
-                    ImGuiUtil.HoverTooltip("Start configuration wizard.");
+                    ImGuiUtil.HoverTooltip(ImGuiService.Text.Get("Start configuration wizard."));
                 }
             }
         }

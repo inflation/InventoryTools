@@ -66,7 +66,7 @@ namespace InventoryTools.Logic.Filters.Abstract
             if (HasValueSet(configuration))
             {
                 ImGui.SameLine();
-                if (ImGui.Button("Clear Color"))
+                if (ImGui.Button(ImGuiService.Text.Label("Clear Color")))
                 {
                     UpdateFilterConfiguration(configuration, null);
                 }

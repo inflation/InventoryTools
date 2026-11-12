@@ -21,7 +21,7 @@ public sealed class SectionBlock : IConfigBlock
         ImGui.Spacing();
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
         {
-            ImGui.TextUnformatted(Title);
+            ImGui.TextUnformatted(context.ImGuiService.Text.Get(Title));
         }
 
         ImGui.Separator();

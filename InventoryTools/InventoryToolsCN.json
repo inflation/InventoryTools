@@ -1,0 +1,19 @@
+﻿{
+  "Author": "Critical_Impact & inflation",
+  "Name": "Allagan Tools（国服适配/汉化）",
+  "Punchline": "查找和整理道具、规划制作，快速查询怪物、任务、飞空艇与潜水艇探索信息。",
+  "Description": "Allagan Tools 可追踪各角色、雇员及部队储物柜中的道具。使用筛选器即可查找道具的存放位置，并确定整理去向。\n\n其他功能：\n- 规划制作清单\n- 查询市场布告板价格\n- 查找、整理道具或取用制作材料时，在背包中高亮对应道具\n- 在道具详情中查看商人及其他获取途径\n- 搜索任务、怪物、飞空艇与潜水艇探索信息\n- 组合多个筛选条件来查找特定道具\n- 将鼠标悬停在道具上，在提示中查看存放位置",
+  "Tags": ["库存", "整理", "筛选"],
+  "InternalName": "InventoryToolsCN",
+  "RepoUrl": "https://github.com/inflation/DalamudPlugins",
+  "LoadPriority": 0,
+  "CanUnloadAsync": false,
+  "IconUrl": "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/icon.png",
+  "ImageUrls": [
+    "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/banner1.png",
+    "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/screenshot1.png",
+    "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/screenshot2.png",
+    "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/screenshot3.png",
+    "https://raw.githubusercontent.com/Critical-Impact/InventoryTools/main/InventoryTools/Images/screenshot4.png"
+  ]
+}

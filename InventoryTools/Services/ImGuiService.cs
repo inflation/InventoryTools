@@ -11,6 +11,7 @@ using FFXIVClientStructs.FFXIV.Common.Math;
 using Dalamud.Bindings.ImGui;
 using InventoryTools.Extensions;
 using InventoryTools.Logic;
+using InventoryTools.Localizers;
 
 namespace InventoryTools.Services;
 
@@ -31,12 +32,14 @@ public class ImGuiService : AllaganLib.Interface.Services.ImGuiService
     private readonly IDalamudPluginInterface pluginInterface;
     public ITextureProvider TextureProvider { get; }
     public ImGuiMenuService ImGuiMenuService { get; }
+    public UiText Text { get; }
 
-    public ImGuiService(ITextureProvider textureProvider, ImGuiMenuService imGuiMenuService, IDalamudPluginInterface pluginInterface) : base(pluginInterface, textureProvider)
+    public ImGuiService(ITextureProvider textureProvider, ImGuiMenuService imGuiMenuService, IDalamudPluginInterface pluginInterface, UiText text) : base(pluginInterface, textureProvider)
     {
         this.pluginInterface = pluginInterface;
         TextureProvider = textureProvider;
         ImGuiMenuService = imGuiMenuService;
+        Text = text;
     }
 
 
@@ -126,7 +129,7 @@ public class ImGuiService : AllaganLib.Interface.Services.ImGuiService
         {
             using (ImRaii.Tooltip())
             {
-                ImGui.Text(tooltip);
+                ImGui.TextUnformatted(Text.Get(tooltip));
             }
         }
 
@@ -244,7 +247,7 @@ public class ImGuiService : AllaganLib.Interface.Services.ImGuiService
             using (ImRaii.Tooltip())
             {
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
-                ImGui.TextUnformatted(helpText);
+                ImGui.TextUnformatted(Text.Get(helpText));
                 ImGui.PopTextWrapPos();
                 if (imagePath != null)
                 {
@@ -274,7 +277,7 @@ public class ImGuiService : AllaganLib.Interface.Services.ImGuiService
                     }
                     else
                     {
-                        ImGui.TextUnformatted(line);
+                        ImGui.TextUnformatted(Text.Get(line));
                     }
                 }
 

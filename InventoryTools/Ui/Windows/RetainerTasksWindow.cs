@@ -29,7 +29,7 @@ public class RetainerTasksWindow : GenericTabbedTable<RetainerTaskRow>, IMenuWin
     }
     public override void Initialize()
     {
-        WindowName = "Retainer Ventures";
+        WindowName = ImGuiService.Text.Label("Retainer Ventures");
         Key = "retainerTasks";
         _columns = new List<TableColumn<RetainerTaskRow>>()
         {

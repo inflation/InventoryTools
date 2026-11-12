@@ -4,6 +4,7 @@ using CriticalCommonLib.Services.Mediator;
 using DalaMock.Host.Mediator;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using InventoryTools.Localizers;
 using InventoryTools.Logic.Settings;
 using InventoryTools.Services;
 
@@ -15,6 +16,7 @@ namespace InventoryTools.Logic
         private readonly ImGuiTooltipModeSetting _tooltipModeSetting;
         private readonly ImGuiMenuService _imGuiMenuService;
         private readonly InventoryToolsConfiguration _configuration;
+        protected UiText Text { get; }
 
         protected ImGuiTableFlags _tableFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersV |
                                                 ImGuiTableFlags.BordersOuterV | ImGuiTableFlags.BordersInnerV |
@@ -28,12 +30,13 @@ namespace InventoryTools.Logic
         public List<SearchResult> RenderSearchResults { get; set; } = new List<SearchResult>();
         public bool InitialColumnSetupDone { get; set; }
 
-        public RenderTableBase(ImGuiMenuService imGuiMenuService, ImGuiTooltipService imGuiTooltipService, ImGuiTooltipModeSetting tooltipModeSetting, InventoryToolsConfiguration configuration)
+        public RenderTableBase(ImGuiMenuService imGuiMenuService, ImGuiTooltipService imGuiTooltipService, ImGuiTooltipModeSetting tooltipModeSetting, InventoryToolsConfiguration configuration, UiText text)
         {
             _imGuiTooltipService = imGuiTooltipService;
             _tooltipModeSetting = tooltipModeSetting;
             _imGuiMenuService = imGuiMenuService;
             _configuration = configuration;
+            Text = text;
         }
 
         public virtual void Initialize(FilterConfiguration filterConfiguration)

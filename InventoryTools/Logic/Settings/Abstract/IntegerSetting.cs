@@ -17,12 +17,12 @@ namespace InventoryTools.Logic.Settings.Abstract
             if (disableColouring != true && HasValueSet(configuration))
             {
                 ImGui.PushStyleColor(ImGuiCol.Text,ImGuiColors.HealerGreen);
-                ImGui.LabelText("##" + Key + "Label", customName ?? Name);
+                ImGui.LabelText("##" + Key + "Label", ImGuiService.Text.Get(customName ?? Name));
                 ImGui.PopStyleColor();
             }
             else
             {
-                ImGui.LabelText("##" + Key + "Label", customName ?? Name);
+                ImGui.LabelText("##" + Key + "Label", ImGuiService.Text.Get(customName ?? Name));
             }
             ImGui.SetNextItemWidth(InputSize);
             if (ImGui.InputText("##"+Key+"Input", ref value, 100, ImGuiInputTextFlags.CharsDecimal))
@@ -38,7 +38,7 @@ namespace InventoryTools.Logic.Settings.Abstract
             if (disableReset != true && HasValueSet(configuration))
             {
                 ImGui.SameLine();
-                if (ImGui.Button("Reset##" + Key + "Reset"))
+                if (ImGui.Button(ImGuiService.Text.Get("Reset") + "##" + Key + "Reset"))
                 {
                     Reset(configuration);
                 }

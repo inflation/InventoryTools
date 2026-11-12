@@ -431,7 +431,7 @@ public class CharacterScopePicker
         {
             if (combo)
             {
-                ImGui.Text("Character Scope Editor");
+                ImGui.Text(_imGuiService.Text.Get("Character Scope Editor"));
                 using(var child = ImRaii.Child("selected", new Vector2(200, 0) * ImGui.GetIO().FontGlobalScale , true, ImGuiWindowFlags.NoScrollbar))
                 {
                     if (child)
@@ -442,7 +442,7 @@ public class CharacterScopePicker
                             {
                                 if (searchScopes.Count == 0)
                                 {
-                                    ImGui.TextWrapped("No scopes defined yet. Press add to start.");
+                                    ImGui.TextWrapped(_imGuiService.Text.Get("No scopes defined yet. Press add to start."));
                                 }
 
                                 for (var index = 0; index < searchScopes.Count; index++)
@@ -473,14 +473,14 @@ public class CharacterScopePicker
                         {
                             if (commandBar)
                             {
-                                if (ImGui.Button("Add"))
+                                if (ImGui.Button(_imGuiService.Text.Label("Add")))
                                 {
                                     _selectedScope = new CharacterSearchScope();
                                     searchScopes.Add(_selectedScope);
                                     changed = true;
                                 }
                                 ImGui.SameLine();
-                                if (ImGui.Button("Save"))
+                                if (ImGui.Button(_imGuiService.Text.Label("Save")))
                                 {
                                     ImGui.CloseCurrentPopup();
                                 }
@@ -494,9 +494,9 @@ public class CharacterScopePicker
                 {
                     if (_selectedScope == null)
                     {
-                        ImGui.TextWrapped("The character scope editor allows you define which characters you want to search across.");
-                        ImGui.TextWrapped("By default, every character Allagan Tools knows about is searched.");
-                        ImGui.TextWrapped("By providing a set of scopes, you are narrowing down from which characters are displayed/counted.");
+                        ImGui.TextWrapped(_imGuiService.Text.Get("The character scope editor allows you define which characters you want to search across."));
+                        ImGui.TextWrapped(_imGuiService.Text.Get("By default, every character Allagan Tools knows about is searched."));
+                        ImGui.TextWrapped(_imGuiService.Text.Get("By providing a set of scopes, you are narrowing down from which characters are displayed/counted."));
                     }
                     else
                     {
@@ -509,7 +509,7 @@ public class CharacterScopePicker
                                     var isCharacter = _selectedScope.CharacterId != null;
                                     var isWorld = _selectedScope.WorldId != null;
                                     var isActiveCharacter = _selectedScope.ActiveCharacter != null;
-                                    ImGui.Text("Search Scope:");
+                                    ImGui.Text(_imGuiService.Text.Get("Search Scope:"));
                                     ImGui.Separator();
                                     if (ImGui.RadioButton("All",!isCharacter && !isWorld && !isActiveCharacter))
                                     {
@@ -645,7 +645,7 @@ public class CharacterScopePicker
                                     ImGui.Separator();
                                     ImGui.NewLine();
                                     var invert = _selectedScope.Invert;
-                                    if (ImGui.Checkbox("Invert", ref invert))
+                                    if (ImGui.Checkbox(_imGuiService.Text.Label("Invert"), ref invert))
                                     {
                                         _selectedScope.Invert = invert;
                                         changed = true;
@@ -660,13 +660,13 @@ public class CharacterScopePicker
                             {
                                 if (commandBar)
                                 {
-                                    if (ImGui.Button("Save"))
+                                    if (ImGui.Button(_imGuiService.Text.Label("Save")))
                                     {
                                         _selectedScope = null;
                                         changed = true;
                                     }
                                     ImGui.SameLine();
-                                    if (ImGui.Button("Delete") && _selectedScope != null)
+                                    if (ImGui.Button(_imGuiService.Text.Label("Delete")) && _selectedScope != null)
                                     {
                                         searchScopes.Remove(_selectedScope);
                                         _selectedScope = null;

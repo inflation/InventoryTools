@@ -45,7 +45,7 @@ public class RemoveButtonColumn : ButtonColumn
                 configuration.RemoveCuratedItem(searchResult.CuratedItem);
             }
         }
-        ImGuiUtil.HoverTooltip("Remove this item");
+        ImGuiUtil.HoverTooltip(_imGuiService.Text.Get("Remove this item"));
 
         return null;
     }

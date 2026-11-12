@@ -44,7 +44,7 @@ public class ItemGardeningCrossbreedSourceRenderer : ItemInfoRenderer<ItemGarden
     public override Action<List<ItemSource>>? DrawTooltipGrouped => sources =>
     {
         var actualSources = AsSource(sources);
-        ImGui.Text("Crossbreeds:");
+        ImGui.Text(Text.Get("Crossbreeds:"));
         var chunkedSources = actualSources.OrderBy(c =>c.Seed1.NameString).Chunk(actualSources.Count / MaxColumns);
         using (var table = ImRaii.Table("CrossbreedTable", this.MaxColumns, ImGuiTableFlags.SizingStretchProp))
         {

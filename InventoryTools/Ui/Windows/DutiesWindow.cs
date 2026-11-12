@@ -31,7 +31,7 @@ public class DutiesWindow : GenericTabbedTable<ContentFinderConditionRow>, IMenu
     }
     public override void Initialize()
     {
-        WindowName = "Duties";
+        WindowName = ImGuiService.Text.Label("Duties");
         Key = "duties";
 
         _columns = new List<TableColumn<ContentFinderConditionRow>>()

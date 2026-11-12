@@ -400,7 +400,7 @@ public abstract class ItemSupplementUseRenderer<T> : ItemSupplementSourceRendere
                 ImGui.SameLine();
                 if (source.Supplement.Min == source.Supplement.Max)
                 {
-                    ImGui.Text("(Drops 1)");
+                    ImGui.Text(Text.Get("(Drops 1)"));
                 }
                 else
                 {
@@ -427,7 +427,7 @@ public abstract class ItemSupplementUseRenderer<T> : ItemSupplementSourceRendere
             ImGui.SameLine();
             if (asSource.Supplement.Min == asSource.Supplement.Max)
             {
-                ImGui.Text("(Drops 1)");
+                ImGui.Text(Text.Get("(Drops 1)"));
             }
             else
             {

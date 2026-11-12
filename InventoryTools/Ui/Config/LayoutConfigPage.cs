@@ -95,11 +95,11 @@ public class LayoutConfigPage : IConfigPage
         {
             entries.Add(new ConfigSearchEntry(
                 settingNode.SettingType,
-                settingNode.NameOverride ?? setting.Name,
-                setting.HelpText,
+                _imGuiService.Text.Get(settingNode.NameOverride ?? setting.Name),
+                _imGuiService.Text.Get(setting.HelpText),
                 _root.Key,
-                _root.Name,
-                section));
+                _imGuiService.Text.Get(_root.Name),
+                section == null ? null : _imGuiService.Text.Get(section)));
         }
 
         foreach (var child in block.Children)

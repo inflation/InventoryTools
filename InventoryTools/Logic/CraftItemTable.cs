@@ -28,8 +28,8 @@ namespace InventoryTools.Logic
 
         public CraftItemTable(ImGuiMenuService imGuiMenuService, ImGuiTooltipService imGuiTooltipService,
             InventoryToolsConfiguration configuration, ImGuiTooltipModeSetting tooltipModeSetting,
-            CraftGroupingLocalizer craftGroupingLocalizer) : base(
-            imGuiMenuService, imGuiTooltipService, tooltipModeSetting, configuration)
+            CraftGroupingLocalizer craftGroupingLocalizer, UiText text) : base(
+            imGuiMenuService, imGuiTooltipService, tooltipModeSetting, configuration, text)
         {
             _craftGroupingLocalizer = craftGroupingLocalizer;
             _tableFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersV |
@@ -121,7 +121,7 @@ namespace InventoryTools.Logic
                                         ImGuiUtil.RightAlign("?", SortColumn == index ? 8 : 0);
                                     }
 
-                                    ImGuiUtil.HoverTooltip(column.Column.HelpText);
+                                    ImGuiUtil.HoverTooltip(Text.Get(column.Column.HelpText));
                                 }
 
                                 if (refresh && !Refreshing)
@@ -195,7 +195,7 @@ namespace InventoryTools.Logic
                                     ImGuiUtil.RightAlign("?", SortColumn == index ? 8 : 0);
                                 }
 
-                                ImGuiUtil.HoverTooltip(column.Column.HelpText);
+                                ImGuiUtil.HoverTooltip(Text.Get(column.Column.HelpText));
                             }
 
                             if (refresh && !Refreshing)

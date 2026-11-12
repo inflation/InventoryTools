@@ -84,7 +84,7 @@ public abstract class InventoryScopeFilter : Filter<List<InventorySearchScope>?>
         if (HasValueSet(configuration) && ShowReset)
         {
             ImGui.SameLine();
-            if (ImGui.Button("Reset##Reset"))
+            if (ImGui.Button(ImGuiService.Text.Label("Reset##Reset")))
             {
                 ResetFilter(configuration);
             }

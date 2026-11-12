@@ -57,7 +57,7 @@ public class ItemCraftResultSourceRenderer : ItemInfoRenderer<ItemCraftResultSou
         ImGui.Text($"Difficulty: {asSource.Recipe.Base.DifficultyFactor}");
         ImGui.Text($"Required Craftsmanship: {asSource.Recipe.Base.RequiredCraftsmanship}");
 
-        ImGui.Text("Ingredients:");
+        ImGui.Text(Text.Get("Ingredients:"));
         using (ImRaii.PushIndent())
         {
             foreach (var ingredient in asSource.Recipe.IngredientCounts)
